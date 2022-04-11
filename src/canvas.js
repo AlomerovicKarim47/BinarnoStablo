@@ -3,8 +3,8 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 var centarX = window.innerWidth/2
 var offsetY = 50
-var vel = 32 //duzina i sirina celije grida
-var rad = 15 //radius cvorova
+var vel = 80 //duzina i sirina celije grida
+var rad = 50 //radius cvorova
 
 var c = canvas.getContext('2d');
 var stablo = new Stablo()
@@ -16,12 +16,8 @@ var inputInsert = document.getElementById('inputInsert')
 
 btnGenerisi.onclick = function(){ 
     stablo.insert(6)
-    stablo.insert(3)
-    stablo.insert(4)
-    stablo.insert(5)
-    stablo.insert(2)
     stablo.insert(9)
-    stablo.insert(8)
+  
     stablo.insert(10)
 }
 
@@ -53,16 +49,36 @@ var crtajCvor = function(cvor){
     c.fill()
     c.stroke()
     c.fillStyle = "black"
-    c.font = rad + 'pt Calibri';
+    c.font =  '8pt Calibri';
     c.textAlign = "center"
     c.textBaseline = "middle"
-    c.fillText(cvor.kljuc, centarX + cvor.x*vel,  offsetY + cvor.y*vel)
+    c.fillText(cvor.kljuc + " ("+cvor.x + ", " + cvor.y+") " + cvor.novaPoz, centarX + cvor.x*vel,  offsetY + cvor.y*vel)
     c.closePath()
+}
+
+var pomjeriCvor = function(cvor){
+    if (cvor.x > 0 && cvor.x < cvor.novaPoz){
+        cvor.x += 0.1
+    }
+    else if (cvor.x < 0 && cvor.x > cvor.novaPoz){
+        cvor.x -= 0.1
+    }
+    else if (cvor.x >= cvor.novaPoz){
+        stablo.korijenPomjeranja = null
+        cvor.x = Math.round(cvor.x)
+        console.log(cvor.x)
+        cvor.novaPoz = null
+    }
 }
 
 var crtaj = function(){
     if (!stablo.korijen) return
+    c.clearRect(0,0, canvas.width, canvas.height)
+    if (stablo.korijenPomjeranja){
+        if (!stablo.korijenPomjeranja.novaPoz)
+            stablo.postorder(stablo.korijenPomjeranja, function(cvor){cvor.novaPoz = cvor.x + 1})
+        stablo.postorder(stablo.korijenPomjeranja, pomjeriCvor)
+    }
     stablo.postorder(stablo.korijen, crtajCvor)
 }
-
-setInterval(crtaj, 150)
+setInterval(crtaj, 60)
