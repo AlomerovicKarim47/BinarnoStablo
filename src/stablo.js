@@ -15,11 +15,19 @@ class Stablo{
         var z = new Cvor(kljuc)
         var y = null
         var x = this.korijen
+        var posX = 0
+        var posY = 0
         while (x != null){
             y = x
-            if (z.kljuc < x.kljuc)
+            if (z.kljuc < x.kljuc){
                 x = x.lijevo
-            else x = x.desno
+                posX--
+            }
+            else{ 
+                x = x.desno
+                posX++
+            }
+            posY++
         }
         z.roditelj = y
         if (y == null)
@@ -28,5 +36,14 @@ class Stablo{
             y.lijevo = z
         else
             y.desno = z
+        z.x = posX
+        z.y = posY
+    }
+    postorder(x, operacija){
+        if (x.lijevo)
+            this.postorder(x.lijevo, operacija)
+        if (x.desno)
+            this.postorder(x.desno, operacija)
+            operacija(x)
     }
 }
