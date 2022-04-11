@@ -4,6 +4,7 @@ class Cvor{
         this.lijevo = null
         this.desno = null
         this.roditelj = null
+        this.novaPoz = null
     }
 }
 
@@ -48,7 +49,7 @@ class Stablo{
         z.y = posY
         this.novi = z
         var c = z
-        if (c.roditelj && c.roditelj.lijevo && c.roditelj.lijevo.kljuc == c.kljuc) //ako je lijevo dijete
+        /*if (c.roditelj && c.roditelj.lijevo && c.roditelj.lijevo.kljuc == c.kljuc) //ako je lijevo dijete
         {
             while (c.roditelj && c.roditelj.lijevo && c.roditelj.lijevo.kljuc == c.kljuc){ //dok god je lijevo dijete i penje se desno
                 c = c.roditelj
@@ -57,6 +58,13 @@ class Stablo{
                 this.korijenPomjeranja = c
                 
             }
+        }*/
+        while (c){
+            if (c.roditelj && c.roditelj.x == z.x){
+                this.korijenPomjeranja = c
+                break
+            }
+            c = c.roditelj
         }
     }
     postorder(x, operacija){

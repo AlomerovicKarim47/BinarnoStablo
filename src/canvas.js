@@ -57,8 +57,8 @@ var crtajCvor = function(cvor){
 }
 
 var pomjeriCvor = function(cvor){
-    console.log("--------------------------")
-    console.log("Pomjeram: "+cvor.kljuc, "X Koord: ", cvor.x, "Roundano: ", Math.round(cvor.x))
+    //console.log("--------------------------")
+    //console.log("Pomjeram: "+cvor.kljuc, "X Koord: ", cvor.x, "Roundano: ", Math.round(cvor.x))
     
     if (cvor.x > 0 && cvor.x < cvor.novaPoz){
         cvor.x += 0.1
@@ -66,8 +66,13 @@ var pomjeriCvor = function(cvor){
     else if (cvor.x < 0 && cvor.x > cvor.novaPoz){
         cvor.x -= 0.1
     }
-    if (cvor.x >= cvor.novaPoz){
-        console.log("ZA ROUNDAT: "+ cvor.x)
+    if (cvor. x > 0 && cvor.x >= cvor.novaPoz){
+        cvor.x = Math.round(cvor.x)
+        cvor.novaPoz = null
+        if (cvor.kljuc == stablo.korijenPomjeranja.kljuc) //prestat sa radnjom tek akd smo stigli do korijena
+            stablo.korijenPomjeranja = null
+    }
+    else if (cvor.x < 0 && cvor.x <= cvor.novaPoz){
         cvor.x = Math.round(cvor.x)
         cvor.novaPoz = null
         if (cvor.kljuc == stablo.korijenPomjeranja.kljuc) //prestat sa radnjom tek akd smo stigli do korijena
@@ -76,12 +81,21 @@ var pomjeriCvor = function(cvor){
     
 }
 
+var postaviNovuPoziciju = function(cvor){
+    if (cvor.x > 0){
+        //if ((cvor.roditelj.lijevo && cvor.roditelj.lijevo.kljuc == cvor.kljuc) || stablo.korijenPomjeranja.kljuc == cvor.kljuc)
+        cvor.novaPoz = cvor.x + 1
+    }
+    else
+        cvor.novaPoz = cvor.x - 1
+}
+
 var crtaj = function(){
     if (!stablo.korijen) return
     c.clearRect(0,0, canvas.width, canvas.height)
     if (stablo.korijenPomjeranja){
         if (!stablo.korijenPomjeranja.novaPoz)
-            stablo.postorder(stablo.korijenPomjeranja, function(cvor){cvor.novaPoz = cvor.x + 1})
+            stablo.postorder(stablo.korijenPomjeranja, postaviNovuPoziciju)
         stablo.postorder(stablo.korijenPomjeranja, pomjeriCvor)
     }
     stablo.postorder(stablo.korijen, crtajCvor)
