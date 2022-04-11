@@ -57,18 +57,23 @@ var crtajCvor = function(cvor){
 }
 
 var pomjeriCvor = function(cvor){
+    console.log("--------------------------")
+    console.log("Pomjeram: "+cvor.kljuc, "X Koord: ", cvor.x, "Roundano: ", Math.round(cvor.x))
+    
     if (cvor.x > 0 && cvor.x < cvor.novaPoz){
         cvor.x += 0.1
     }
     else if (cvor.x < 0 && cvor.x > cvor.novaPoz){
         cvor.x -= 0.1
     }
-    else if (cvor.x >= cvor.novaPoz){
-        stablo.korijenPomjeranja = null
+    if (cvor.x >= cvor.novaPoz){
+        console.log("ZA ROUNDAT: "+ cvor.x)
         cvor.x = Math.round(cvor.x)
-        console.log(cvor.x)
         cvor.novaPoz = null
+        if (cvor.kljuc == stablo.korijenPomjeranja.kljuc) //prestat sa radnjom tek akd smo stigli do korijena
+            stablo.korijenPomjeranja = null
     }
+    
 }
 
 var crtaj = function(){

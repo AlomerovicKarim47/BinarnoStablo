@@ -55,7 +55,7 @@ class Stablo{
             }
             if (c.kljuc != this.korijen.kljuc && c.roditelj.x == z.x){ //ako nismo dosli do korijena i ako se x-evi poklapaju
                 this.korijenPomjeranja = c
-                console.log(this.korijenPomjeranja)
+                
             }
         }
     }
