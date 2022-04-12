@@ -63,7 +63,7 @@ var pomjeriCvorAnimacija = function(cvor){
     if (cvor.x >= 0 && cvor.x < cvor.novaPoz){
         cvor.x += 0.1
     }
-    else if (cvor.x <= 0 && cvor.x > cvor.novaPoz){ //<=
+    else if (cvor.x <= 0 && cvor.x > cvor.novaPoz){
         cvor.x -= 0.1
     }
     if (cvor. x > 0 && cvor.x >= cvor.novaPoz){
@@ -87,7 +87,6 @@ var crtaj = function(){
             stablo.progres = 0
             stablo.pomjeri = false
         }
-        console.log("MOVING")
     }
     stablo.postorder(stablo.korijen, crtajCvor)
 }

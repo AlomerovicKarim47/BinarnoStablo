@@ -64,9 +64,9 @@ class Stablo{
         if (this.pomjeri){
             let pomjeri = function (c){
                 if (c.kljuc != z.kljuc){
-                    if (c.x > z.x /*&& z.x > 0*/)
+                    if (c.x > z.x)
                         c.novaPoz = c.x + 1
-                    else if (c.x < z.x /*&& z.x < 0*/)
+                    else if (c.x < z.x)
                         c.novaPoz = c.x - 1
                     else if (c.x == z.x && z.desnoDijete &&  c.x > 0)
                         c.novaPoz = c.x + 1
@@ -88,7 +88,7 @@ class Stablo{
                 this.postorder(this.korijen.lijevo, pomjeri)
             }
 
-            if (z.x > 0 && z.lijevoDijete) //<=
+            if (z.x > 0 && z.lijevoDijete)
                 z.novaPoz = z.x + 1
             else if (z.x < 0 && z.desnoDijete)
                 z.novaPoz = z.x - 1        
