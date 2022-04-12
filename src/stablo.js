@@ -5,12 +5,15 @@ class Cvor{
         this.desno = null
         this.roditelj = null
         this.novaPoz = null
+        this.desnoDijete = false
+        this.lijevoDijete = false
     }
 }
 
 class Stablo{
     korijen = null
-    korijenPomjeranja = null
+    //korijenPomjeranja = null
+    pomjeri = false
     novi = null
     insert(kljuc){
         if (!kljuc)
@@ -40,32 +43,51 @@ class Stablo{
         else if (z.kljuc < y.kljuc){
             y.lijevo = z
             z.x = z.roditelj.x - 1
+            z.lijevoDijete = true
         }
         else{
             y.desno = z
             z.x = z.roditelj.x + 1
+            z.desnoDijete = true
         }
-        //z.x = posX
+        
         z.y = posY
         this.novi = z
-        var c = z
-        /*if (c.roditelj && c.roditelj.lijevo && c.roditelj.lijevo.kljuc == c.kljuc) //ako je lijevo dijete
-        {
-            while (c.roditelj && c.roditelj.lijevo && c.roditelj.lijevo.kljuc == c.kljuc){ //dok god je lijevo dijete i penje se desno
-                c = c.roditelj
-            }
-            if (c.kljuc != this.korijen.kljuc && c.roditelj.x == z.x){ //ako nismo dosli do korijena i ako se x-evi poklapaju
-                this.korijenPomjeranja = c
-                
-            }
-        }*/
+
+        //provjeri ima li cvorova sa istim x koordinatama 
+        var c = z.roditelj
         while (c){
-            if (c.roditelj && c.roditelj.x == z.x){
-                this.korijenPomjeranja = c
+            if (c.x == z.x){
+                this.pomjeri = true
+                /*if (c.x > 0)
+                    c.novaPoz = c.x + 1
+                else if (c.x < 0)
+                    c.novaPoz = c.x - 1*/
                 break
             }
             c = c.roditelj
         }
+        //pomjeriti ih ako ih ima
+        if (this.pomjeri){
+            if (z.lijevoDijete && z.novaPoz == null)
+                z.novaPoz = z.x + 1
+            c = z.roditelj
+            while (c){
+                if (c.novaPoz == null)
+                    if (c.x > z.x)
+                        c.novaPoz = c.x + 1
+                    else if (c.x < z.x)
+                        c.novaPoz = c.x - 1
+                    else if (z.desnoDijete && c.x == z.x){
+                        if (c.x > 0)
+                            c.novaPoz = c.x + 1
+                        else if (c.x < 0)
+                            c.novaPoz = c.x - 1
+                    }
+                c = c.roditelj
+            }
+        }
+        
     }
     postorder(x, operacija){
         if (x.lijevo)

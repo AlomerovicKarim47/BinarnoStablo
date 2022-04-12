@@ -69,34 +69,33 @@ var pomjeriCvor = function(cvor){
     if (cvor. x > 0 && cvor.x >= cvor.novaPoz){
         cvor.x = Math.round(cvor.x)
         cvor.novaPoz = null
-        if (cvor.kljuc == stablo.korijenPomjeranja.kljuc) //prestat sa radnjom tek akd smo stigli do korijena
-            stablo.korijenPomjeranja = null
+        if (cvor.kljuc == stablo.korijen.kljuc) //prestat sa radnjom tek akd smo stigli do korijena
+            stablo.pomjeri = false
     }
     else if (cvor.x < 0 && cvor.x <= cvor.novaPoz){
         cvor.x = Math.round(cvor.x)
         cvor.novaPoz = null
-        if (cvor.kljuc == stablo.korijenPomjeranja.kljuc) //prestat sa radnjom tek akd smo stigli do korijena
-            stablo.korijenPomjeranja = null
+        if (cvor.kljuc == stablo.korijen.kljuc) //prestat sa radnjom tek akd smo stigli do korijena
+            stablo.pomjeri = false
     }
     
 }
 
-var postaviNovuPoziciju = function(cvor){
+/*var postaviNovuPoziciju = function(cvor){
     if (cvor.x > 0){
-        //if ((cvor.roditelj.lijevo && cvor.roditelj.lijevo.kljuc == cvor.kljuc) || stablo.korijenPomjeranja.kljuc == cvor.kljuc)
         cvor.novaPoz = cvor.x + 1
     }
     else
         cvor.novaPoz = cvor.x - 1
-}
+}*/
 
 var crtaj = function(){
     if (!stablo.korijen) return
     c.clearRect(0,0, canvas.width, canvas.height)
-    if (stablo.korijenPomjeranja){
-        if (!stablo.korijenPomjeranja.novaPoz)
-            stablo.postorder(stablo.korijenPomjeranja, postaviNovuPoziciju)
-        stablo.postorder(stablo.korijenPomjeranja, pomjeriCvor)
+    if (stablo.pomjeri){
+        //if (!stablo.korijenPomjeranja.novaPoz)
+        //stablo.postorder(stablo.korijenPomjeranja, postaviNovuPoziciju)
+        stablo.postorder(stablo.korijen, pomjeriCvor)
     }
     stablo.postorder(stablo.korijen, crtajCvor)
 }
