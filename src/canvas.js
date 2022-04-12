@@ -17,8 +17,11 @@ var inputInsert = document.getElementById('inputInsert')
 btnGenerisi.onclick = function(){ 
     stablo.insert(6)
     stablo.insert(9)
-  
     stablo.insert(10)
+    stablo.insert(90)
+    stablo.insert(89)
+    stablo.insert(1)
+    stablo.insert(4)
 }
 
 btnInsert.onclick = function(){
@@ -56,7 +59,7 @@ var crtajCvor = function(cvor){
     c.closePath()
 }
 
-var pomjeriCvor = function(cvor){
+var pomjeriCvorAnimacija = function(cvor){
     if (cvor.x >= 0 && cvor.x < cvor.novaPoz){
         cvor.x += 0.1
     }
@@ -78,7 +81,7 @@ var crtaj = function(){
     if (!stablo.korijen) return
     c.clearRect(0,0, canvas.width, canvas.height)
     if (stablo.pomjeri){
-        stablo.postorder(stablo.korijen, pomjeriCvor)
+        stablo.postorder(stablo.korijen, pomjeriCvorAnimacija)
         stablo.progres += 0.1
         if (stablo.progres >= 1){
             stablo.progres = 0
