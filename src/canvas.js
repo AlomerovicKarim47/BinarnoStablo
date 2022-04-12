@@ -24,8 +24,7 @@ btnGenerisi.onclick = function(){
 btnInsert.onclick = function(){
     var x = parseInt(inputInsert.value)
     stablo.insert(x)
-    inputInsert.value = null //NaN?
-    console.log(stablo.pomjeri)
+    inputInsert.value = null
 }
 
 btnPrint.onclick = function(){
@@ -58,9 +57,6 @@ var crtajCvor = function(cvor){
 }
 
 var pomjeriCvor = function(cvor){
-    //console.log("--------------------------")
-    //console.log("Pomjeram: "+cvor.kljuc, "X Koord: ", cvor.x, "Roundano: ", Math.round(cvor.x))
-    
     if (cvor.x >= 0 && cvor.x < cvor.novaPoz){
         cvor.x += 0.1
     }
@@ -70,42 +66,25 @@ var pomjeriCvor = function(cvor){
     if (cvor. x > 0 && cvor.x >= cvor.novaPoz){
         cvor.x = Math.round(cvor.x)
         cvor.novaPoz = null
-        /*if (cvor.kljuc == stablo.korijen.desno.kljuc){ //prestat sa radnjom tek akd smo stigli do korijena
-            stablo.pomjeri = false
-            console.log("FALSED")
-        }*/
     }
     else if (cvor.x < 0 && cvor.x <= cvor.novaPoz){
         cvor.x = Math.round(cvor.x)
         cvor.novaPoz = null
-        /*if (cvor.kljuc == stablo.korijen.kljuc){ //prestat sa radnjom tek akd smo stigli do korijena
-            stablo.pomjeri = false
-            console.log("FALSED")
-        }*/
     }
     
 }
-
-/*var postaviNovuPoziciju = function(cvor){
-    if (cvor.x > 0){
-        cvor.novaPoz = cvor.x + 1
-    }
-    else
-        cvor.novaPoz = cvor.x - 1
-}*/
 
 var crtaj = function(){
     if (!stablo.korijen) return
     c.clearRect(0,0, canvas.width, canvas.height)
     if (stablo.pomjeri){
-        //if (!stablo.korijenPomjeranja.novaPoz)
-        //stablo.postorder(stablo.korijenPomjeranja, postaviNovuPoziciju)
         stablo.postorder(stablo.korijen, pomjeriCvor)
-        /*stablo.progres += 0.1
+        stablo.progres += 0.1
         if (stablo.progres >= 1){
             stablo.progres = 0
             stablo.pomjeri = false
-        }*/
+        }
+        console.log("MOVING")
     }
     stablo.postorder(stablo.korijen, crtajCvor)
 }

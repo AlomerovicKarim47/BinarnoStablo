@@ -12,7 +12,6 @@ class Cvor{
 
 class Stablo{
     korijen = null
-    //korijenPomjeranja = null
     pomjeri = false
     novi = null
     insert(kljuc){
@@ -21,17 +20,14 @@ class Stablo{
         var z = new Cvor(kljuc)
         var y = null
         var x = this.korijen
-        //var posX = 0
         var posY = 0
         while (x != null){
             y = x
             if (z.kljuc < x.kljuc){
                 x = x.lijevo
-                //posX--
             }
             else{ 
                 x = x.desno
-                //posX++
             }
             posY++
         }
@@ -58,7 +54,6 @@ class Stablo{
         var c = z.roditelj
         while (c){
             if (c.x == z.x){
-                console.log(c, z)
                 this.pomjeri = true
                 this.progres = 0
                 break
@@ -68,21 +63,35 @@ class Stablo{
         //pomjeriti ih ako ih ima
         if (this.pomjeri){
             let pomjeri = function (c){
-                if (c.novaPoz == null && c.kljuc != z.kljuc)
-                    if (c.x > z.x)
+                if (c.kljuc != z.kljuc){
+                    if (c.x > z.x /*&& z.x > 0*/)
                         c.novaPoz = c.x + 1
-                    else if (c.x < z.x)
+                    else if (c.x < z.x /*&& z.x < 0*/)
                         c.novaPoz = c.x - 1
-                    else if (z.desnoDijete && c.x == z.x && c.x > 0)
+                    else if (c.x == z.x && z.desnoDijete &&  c.x > 0)
                         c.novaPoz = c.x + 1
-                    else if (z.lijevoDijete && c.x == z.x && c.x < 0)
+                    else if (c.x == z.x && z.lijevoDijete && c.x < 0)
                         c.novaPoz = c.x - 1
+                }
             }
-            this.postorder(this.korijen, pomjeri)
-            if (z.x >= 0 && z.lijevoDijete) //<=
+            if (z.x > 0)
+                this.postorder(this.korijen.desno, pomjeri)
+            else if (z.x < 0)
+                this.postorder(this.korijen.lijevo, pomjeri)
+            
+            if (z.x == 0 && z.lijevoDijete){
+                z.novaPoz = 1
+                this.postorder(this.korijen.desno, pomjeri)
+            }
+            else if (z.x == 0 && z.desnoDijete){
+                z.novaPoz = -1
+                this.postorder(this.korijen.lijevo, pomjeri)
+            }
+
+            if (z.x > 0 && z.lijevoDijete) //<=
                 z.novaPoz = z.x + 1
-            else if (z.x <= 0 && z.desnoDijete)
-                z.novaPoz = z.x - 1
+            else if (z.x < 0 && z.desnoDijete)
+                z.novaPoz = z.x - 1        
         }
         
     }
