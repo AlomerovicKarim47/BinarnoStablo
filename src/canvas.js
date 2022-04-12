@@ -25,6 +25,7 @@ btnInsert.onclick = function(){
     var x = parseInt(inputInsert.value)
     stablo.insert(x)
     inputInsert.value = null //NaN?
+    console.log(stablo.pomjeri)
 }
 
 btnPrint.onclick = function(){
@@ -60,23 +61,27 @@ var pomjeriCvor = function(cvor){
     //console.log("--------------------------")
     //console.log("Pomjeram: "+cvor.kljuc, "X Koord: ", cvor.x, "Roundano: ", Math.round(cvor.x))
     
-    if (cvor.x > 0 && cvor.x < cvor.novaPoz){
+    if (cvor.x >= 0 && cvor.x < cvor.novaPoz){
         cvor.x += 0.1
     }
-    else if (cvor.x < 0 && cvor.x > cvor.novaPoz){
+    else if (cvor.x <= 0 && cvor.x > cvor.novaPoz){ //<=
         cvor.x -= 0.1
     }
     if (cvor. x > 0 && cvor.x >= cvor.novaPoz){
         cvor.x = Math.round(cvor.x)
         cvor.novaPoz = null
-        if (cvor.kljuc == stablo.korijen.kljuc) //prestat sa radnjom tek akd smo stigli do korijena
+        /*if (cvor.kljuc == stablo.korijen.desno.kljuc){ //prestat sa radnjom tek akd smo stigli do korijena
             stablo.pomjeri = false
+            console.log("FALSED")
+        }*/
     }
     else if (cvor.x < 0 && cvor.x <= cvor.novaPoz){
         cvor.x = Math.round(cvor.x)
         cvor.novaPoz = null
-        if (cvor.kljuc == stablo.korijen.kljuc) //prestat sa radnjom tek akd smo stigli do korijena
+        /*if (cvor.kljuc == stablo.korijen.kljuc){ //prestat sa radnjom tek akd smo stigli do korijena
             stablo.pomjeri = false
+            console.log("FALSED")
+        }*/
     }
     
 }
@@ -96,6 +101,11 @@ var crtaj = function(){
         //if (!stablo.korijenPomjeranja.novaPoz)
         //stablo.postorder(stablo.korijenPomjeranja, postaviNovuPoziciju)
         stablo.postorder(stablo.korijen, pomjeriCvor)
+        /*stablo.progres += 0.1
+        if (stablo.progres >= 1){
+            stablo.progres = 0
+            stablo.pomjeri = false
+        }*/
     }
     stablo.postorder(stablo.korijen, crtajCvor)
 }

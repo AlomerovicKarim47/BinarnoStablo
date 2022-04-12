@@ -21,7 +21,7 @@ class Stablo{
         var z = new Cvor(kljuc)
         var y = null
         var x = this.korijen
-        var posX = 0
+        //var posX = 0
         var posY = 0
         while (x != null){
             y = x
@@ -58,34 +58,31 @@ class Stablo{
         var c = z.roditelj
         while (c){
             if (c.x == z.x){
+                console.log(c, z)
                 this.pomjeri = true
-                /*if (c.x > 0)
-                    c.novaPoz = c.x + 1
-                else if (c.x < 0)
-                    c.novaPoz = c.x - 1*/
+                this.progres = 0
                 break
             }
             c = c.roditelj
         }
         //pomjeriti ih ako ih ima
         if (this.pomjeri){
-            if (z.lijevoDijete && z.novaPoz == null)
-                z.novaPoz = z.x + 1
-            c = z.roditelj
-            while (c){
-                if (c.novaPoz == null)
+            let pomjeri = function (c){
+                if (c.novaPoz == null && c.kljuc != z.kljuc)
                     if (c.x > z.x)
                         c.novaPoz = c.x + 1
                     else if (c.x < z.x)
                         c.novaPoz = c.x - 1
-                    else if (z.desnoDijete && c.x == z.x){
-                        if (c.x > 0)
-                            c.novaPoz = c.x + 1
-                        else if (c.x < 0)
-                            c.novaPoz = c.x - 1
-                    }
-                c = c.roditelj
+                    else if (z.desnoDijete && c.x == z.x && c.x > 0)
+                        c.novaPoz = c.x + 1
+                    else if (z.lijevoDijete && c.x == z.x && c.x < 0)
+                        c.novaPoz = c.x - 1
             }
+            this.postorder(this.korijen, pomjeri)
+            if (z.x >= 0 && z.lijevoDijete) //<=
+                z.novaPoz = z.x + 1
+            else if (z.x <= 0 && z.desnoDijete)
+                z.novaPoz = z.x - 1
         }
         
     }
