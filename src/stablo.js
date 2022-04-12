@@ -104,6 +104,8 @@ class Stablo{
             else if (z.x < 0 && z.desnoDijete)
                 z.novaPoz = z.x - 1        
         }
+
+        put.forEach((a)=>a.amount = 0)
         return put
     }
     postorder(x, operacija){

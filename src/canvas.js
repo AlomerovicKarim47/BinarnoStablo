@@ -43,6 +43,7 @@ var crtajCvor = function(cvor){
     if (cvor.roditelj){
         c.beginPath()
         c.moveTo(x, y)
+        c.lineWidth = 1
         c.lineTo(centarX + cvor.roditelj.x*vel, offsetY + cvor.roditelj.y*vel)
         c.stroke()
         c.closePath()
@@ -78,61 +79,42 @@ var pomjeriCvorAnimacija = function(cvor){
     }
     
 }
-let radd = 0
 var amount = 0;
 function crtajPutanjuAnimacija(){   
-    //let start = put[i]
-    //let end = put [i + 1]
-    
-    /*radd++
-    if (radd > 50)
-    return
-    c.beginPath()
-    c.arc(50, 50, radd, 0, 360)
-    c.fillStyle = 'green'
-    c.fill()
-    c.stroke()
-    c.closePath()*/
-    let start = {x:50, y:50} //animPut[animIndex]
-    let end = {x:100, y:100}//animPut[animIndex + 1]
-
-    
-    var done = false
-    const crtajLinijuAnimacija = () => {
-
-        amount += 0.05; // change to alter duration
-        if (amount >= 1){ 
-            console.log("DONE")
-            done = true
-            return
-        }
-        c.beginPath()
-        //c.clearRect(0, 0, canvas.width, canvas.height);
-        c.strokeStyle = "black";
-        c.moveTo(start.x, start.y);
-        c.lineWidth = 10
-        c.lineTo(start.x + (end.x - start.x) * amount, start.y + (end.y - start.y) * amount);
-        c.stroke();
-        c.closePath()
-        requestAnimationFrame(crtajLinijuAnimacija)
+    for (i = 0; i < animPut.length - 1; i++){
+        crtajLiniju(animPut[i], animPut[i + 1])
     }
-    if (done){
-        animPut = null
-        return
-        }
-    crtajLinijuAnimacija()
-
-      
 }
 
-var animIndex = 0
+function crtajLiniju(start, end){
+
+    var startX = canvas.width + start.x * vel
+    var startY = canvas.height + start.y * vel
+
+    var endX = canvas.width + end.x * vel
+    var endY = canvas.height + end.y * vel
+    c.beginPath()
+    c.strokeStyle = "black";
+    c.moveTo(startX, startY);
+    c.lineWidth = 10
+    c.lineTo(startX + (endX - startX) * amount, startY + (endY - startY) * start.amount);
+    c.stroke();
+    c.closePath()
+}
+
+var putIndex = 0
 
 function crtaj(){
     if (stablo.korijen){
         c.clearRect(0,0, canvas.width, canvas.height)
         if (animPut){
+            animPut[putIndex].amount += 0.3
             crtajPutanjuAnimacija()
-            //animPut = null
+            if (animPut[putIndex].amount > 1){
+                animPut[putIndex].amount = 1
+                if (putIndex < animPut.length-1)
+                    putIndex++
+            }
         }
         stablo.postorder(stablo.korijen, crtajCvor)
         if (stablo.pomjeri){
