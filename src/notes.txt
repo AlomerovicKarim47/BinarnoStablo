@@ -1,3 +1,6 @@
-koordinate dodat (unutar cvora najvjerovatnije i najlakse (32, 64... a ne 1, 2.. pa da se mnozi sa 32))
-
-crtaj() bi trebalo samo crtat, updates i logika izvan toga?
+naci korijen pomjeranja
+pravi korijen ce bit njegov roditelj a ne on
+lijevo prvog korijena postavit na null privremeno
+postaviti poziciju (korijen->p)
+pomjeriti sve
+vratiti lijevo korijena
