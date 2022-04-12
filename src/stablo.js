@@ -21,8 +21,14 @@ class Stablo{
         var y = null
         var x = this.korijen
         var posY = 0
+        var put = []
         while (x != null){
             y = x
+            put.push(
+                {
+                    x: x.x, 
+                    y: x.y
+                })
             if (z.kljuc < x.kljuc){
                 x = x.lijevo
             }
@@ -34,6 +40,11 @@ class Stablo{
         z.roditelj = y
         if (y == null){
             this.korijen = z
+            put.push(
+                {
+                    x: this.korijen.x,
+                    y: this.korijen.y
+                })
             z.x = 0
         }
         else if (z.kljuc < y.kljuc){
@@ -93,7 +104,7 @@ class Stablo{
             else if (z.x < 0 && z.desnoDijete)
                 z.novaPoz = z.x - 1        
         }
-        
+        return put
     }
     postorder(x, operacija){
         if (x.lijevo)

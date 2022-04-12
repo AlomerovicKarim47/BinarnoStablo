@@ -14,6 +14,8 @@ var btnPrint = document.getElementById('btnPrint')
 var btnGenerisi = document.getElementById('btnGenerisi')
 var inputInsert = document.getElementById('inputInsert')
 
+var animPut = null
+
 btnGenerisi.onclick = function(){ 
     stablo.insert(6)
     stablo.insert(9)
@@ -26,7 +28,7 @@ btnGenerisi.onclick = function(){
 
 btnInsert.onclick = function(){
     var x = parseInt(inputInsert.value)
-    stablo.insert(x)
+    animPut = stablo.insert(x)
     inputInsert.value = null
 }
 
@@ -76,18 +78,75 @@ var pomjeriCvorAnimacija = function(cvor){
     }
     
 }
+let radd = 0
+var amount = 0;
+function crtajPutanjuAnimacija(){   
+    //let start = put[i]
+    //let end = put [i + 1]
+    
+    /*radd++
+    if (radd > 50)
+    return
+    c.beginPath()
+    c.arc(50, 50, radd, 0, 360)
+    c.fillStyle = 'green'
+    c.fill()
+    c.stroke()
+    c.closePath()*/
+    let start = {x:50, y:50} //animPut[animIndex]
+    let end = {x:100, y:100}//animPut[animIndex + 1]
 
-var crtaj = function(){
-    if (!stablo.korijen) return
-    c.clearRect(0,0, canvas.width, canvas.height)
-    if (stablo.pomjeri){
-        stablo.postorder(stablo.korijen, pomjeriCvorAnimacija)
-        stablo.progres += 0.1
-        if (stablo.progres >= 1){
-            stablo.progres = 0
-            stablo.pomjeri = false
+    
+    var done = false
+    const crtajLinijuAnimacija = () => {
+
+        amount += 0.05; // change to alter duration
+        if (amount >= 1){ 
+            console.log("DONE")
+            done = true
+            return
+        }
+        c.beginPath()
+        //c.clearRect(0, 0, canvas.width, canvas.height);
+        c.strokeStyle = "black";
+        c.moveTo(start.x, start.y);
+        c.lineWidth = 10
+        c.lineTo(start.x + (end.x - start.x) * amount, start.y + (end.y - start.y) * amount);
+        c.stroke();
+        c.closePath()
+        requestAnimationFrame(crtajLinijuAnimacija)
+    }
+    if (done){
+        animPut = null
+        return
+        }
+    crtajLinijuAnimacija()
+
+      
+}
+
+var animIndex = 0
+
+function crtaj(){
+    if (stablo.korijen){
+        c.clearRect(0,0, canvas.width, canvas.height)
+        if (animPut){
+            crtajPutanjuAnimacija()
+            //animPut = null
+        }
+        stablo.postorder(stablo.korijen, crtajCvor)
+        if (stablo.pomjeri){
+            stablo.postorder(stablo.korijen, pomjeriCvorAnimacija)
+            stablo.progres += 0.1
+            if (stablo.progres >= 1){
+                stablo.progres = 0
+                stablo.pomjeri = false
+            }
         }
     }
-    stablo.postorder(stablo.korijen, crtajCvor)
+    requestAnimationFrame(crtaj)
+    
 }
-setInterval(crtaj, 60)
+
+crtaj()
+//setInterval(crtaj, 60)
