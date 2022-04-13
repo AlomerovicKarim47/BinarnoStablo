@@ -40,11 +40,6 @@ class Stablo{
         z.roditelj = y
         if (y == null){
             this.korijen = z
-            put.push(
-                {
-                    x: this.korijen.x,
-                    y: this.korijen.y
-                })
             z.x = 0
         }
         else if (z.kljuc < y.kljuc){
@@ -60,6 +55,11 @@ class Stablo{
         
         z.y = posY
         this.novi = z
+        put.push(
+            {
+                x: z.x,
+                y: z.y
+            })
 
         //provjeri ima li cvorova sa istim x koordinatama 
         var c = z.roditelj
@@ -105,7 +105,10 @@ class Stablo{
                 z.novaPoz = z.x - 1        
         }
 
-        put.forEach((a)=>a.amount = 0)
+        put.forEach((a)=>{
+            a.radius = 0
+            a.amount = 0
+        })
         return put
     }
     postorder(x, operacija){

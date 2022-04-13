@@ -3,8 +3,8 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 var centarX = window.innerWidth/2
 var offsetY = 50
-var vel = 80 //duzina i sirina celije grida
-var rad = 50 //radius cvorova
+var vel = 70 //duzina i sirina celije grida
+var rad = 30 //radius cvorova
 
 var c = canvas.getContext('2d');
 var stablo = new Stablo()
@@ -44,6 +44,7 @@ var crtajCvor = function(cvor){
         c.beginPath()
         c.moveTo(x, y)
         c.lineWidth = 1
+        c.strokeStyle = "black"
         c.lineTo(centarX + cvor.roditelj.x*vel, offsetY + cvor.roditelj.y*vel)
         c.stroke()
         c.closePath()
@@ -55,10 +56,10 @@ var crtajCvor = function(cvor){
     c.fill()
     c.stroke()
     c.fillStyle = "black"
-    c.font =  '8pt Calibri';
+    c.font =  '15pt Calibri';
     c.textAlign = "center"
     c.textBaseline = "middle"
-    c.fillText(cvor.kljuc + " ("+cvor.x + ", " + cvor.y+") " + cvor.novaPoz, centarX + cvor.x*vel,  offsetY + cvor.y*vel)
+    c.fillText(cvor.kljuc /*+ " ("+cvor.x + ", " + cvor.y+") " + cvor.novaPoz*/, centarX + cvor.x*vel,  offsetY + cvor.y*vel)
     c.closePath()
 }
 
@@ -79,26 +80,61 @@ var pomjeriCvorAnimacija = function(cvor){
     }
     
 }
-var amount = 0;
-function crtajPutanjuAnimacija(){   
-    for (i = 0; i < animPut.length - 1; i++){
-        crtajLiniju(animPut[i], animPut[i + 1])
+function crtajPutanjuAnimacija(){
+    var cvor = animPut[putIndex]
+    if (cvor.radius == rad){
+        cvor.amount += 0.03
+    }
+    else if (cvor.amount == 0)
+        cvor.radius += 0.5   
+
+    for (var i = 0; i < animPut.length; i++){
+        crtajKrug(animPut[i], animPut[i].radius)
+        if (i < animPut.length - 1)
+            crtajLiniju(animPut[i], animPut[i + 1])
+    }
+
+    if (cvor.radius > rad)
+        cvor.radius = rad
+
+    if (cvor.amount > 1){
+        cvor.amount = 1
+        if (putIndex < animPut.length-1)
+            putIndex++
+        else{
+            putIndex = 0
+            animPut = null
+        }
     }
 }
 
 function crtajLiniju(start, end){
 
-    var startX = canvas.width + start.x * vel
-    var startY = canvas.height + start.y * vel
+    var startX = centarX + start.x * vel
+    var startY = offsetY + start.y * vel
 
-    var endX = canvas.width + end.x * vel
-    var endY = canvas.height + end.y * vel
+    var endX = centarX + end.x * vel
+    var endY = offsetY + end.y * vel
     c.beginPath()
-    c.strokeStyle = "black";
+    c.strokeStyle = "red";
     c.moveTo(startX, startY);
     c.lineWidth = 10
-    c.lineTo(startX + (endX - startX) * amount, startY + (endY - startY) * start.amount);
+    c.lineTo(startX + (endX - startX) * start.amount, startY + (endY - startY) * start.amount);
     c.stroke();
+    c.closePath()
+}
+
+function crtajKrug(centar, rad){
+    c.beginPath()
+    c.arc(centarX + centar.x*vel, offsetY + centar.y*vel, rad, 0, 360)
+    
+    c.fillStyle = 'red'
+    c.fill()
+    //c.fillStyle = "black"
+    ////c.font =  '15pt Calibri';
+    //c.textAlign = "center"
+    //c.textBaseline = "middle"
+    //c.fillText(cvor.kljuc /*+ " ("+cvor.x + ", " + cvor.y+") " + cvor.novaPoz*/, centarX + cvor.x*vel,  offsetY + cvor.y*vel)
     c.closePath()
 }
 
@@ -107,17 +143,12 @@ var putIndex = 0
 function crtaj(){
     if (stablo.korijen){
         c.clearRect(0,0, canvas.width, canvas.height)
-        if (animPut){
-            animPut[putIndex].amount += 0.3
-            crtajPutanjuAnimacija()
-            if (animPut[putIndex].amount > 1){
-                animPut[putIndex].amount = 1
-                if (putIndex < animPut.length-1)
-                    putIndex++
-            }
-        }
+        
         stablo.postorder(stablo.korijen, crtajCvor)
-        if (stablo.pomjeri){
+        if (animPut){
+            crtajPutanjuAnimacija()
+        }
+        if (stablo.pomjeri && !animPut){ //Pomjeri samo ako je animacija puta gotova
             stablo.postorder(stablo.korijen, pomjeriCvorAnimacija)
             stablo.progres += 0.1
             if (stablo.progres >= 1){
