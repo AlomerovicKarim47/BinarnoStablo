@@ -6,15 +6,22 @@ var offsetY = 50
 var vel = 70 //duzina i sirina celije grida
 var rad = 30 //radius cvorova
 
+//Za kontrolu animacije putanje
+var animPut = null
+var putIndex = 0
+
+
 var c = canvas.getContext('2d');
 var stablo = new Stablo()
 
+//Html elementi
 var btnInsert = document.getElementById('btnInsert')
 var btnPrint = document.getElementById('btnPrint')
 var btnGenerisi = document.getElementById('btnGenerisi')
 var inputInsert = document.getElementById('inputInsert')
 
-var animPut = null
+
+//---------------
 
 btnGenerisi.onclick = function(){ 
     stablo.insert(6)
@@ -24,6 +31,7 @@ btnGenerisi.onclick = function(){
     stablo.insert(89)
     stablo.insert(1)
     stablo.insert(4)
+    stablo.novi = null
 }
 
 btnInsert.onclick = function(){
@@ -37,6 +45,9 @@ btnPrint.onclick = function(){
 }
 
 var crtajCvor = function(cvor){
+
+    if (stablo.novi && cvor.kljuc == stablo.novi.kljuc)
+        return
     var x = centarX + cvor.x * vel
     var y = offsetY + cvor.y * vel
     
@@ -54,7 +65,7 @@ var crtajCvor = function(cvor){
     c.arc(x, y, rad, 0, 360)
     c.fillStyle = 'green'
     c.fill()
-    c.stroke()
+    //c.stroke()
     c.fillStyle = "black"
     c.font =  '15pt Calibri';
     c.textAlign = "center"
@@ -86,12 +97,12 @@ function crtajPutanjuAnimacija(){
         cvor.amount += 0.03
     }
     else if (cvor.amount == 0)
-        cvor.radius += 0.5   
+        cvor.radius += 0.8   
 
     for (var i = 0; i < animPut.length; i++){
-        crtajKrug(animPut[i], animPut[i].radius)
         if (i < animPut.length - 1)
-            crtajLiniju(animPut[i], animPut[i + 1])
+            crtajLiniju(animPut[i], animPut[i + 1], animPut[i].amount)
+        crtajKrug(animPut[i], animPut[i].radius)
     }
 
     if (cvor.radius > rad)
@@ -104,11 +115,12 @@ function crtajPutanjuAnimacija(){
         else{
             putIndex = 0
             animPut = null
+            stablo.novi = null
         }
     }
 }
 
-function crtajLiniju(start, end){
+function crtajLiniju(start, end, amount = 1){
 
     var startX = centarX + start.x * vel
     var startY = offsetY + start.y * vel
@@ -119,7 +131,7 @@ function crtajLiniju(start, end){
     c.strokeStyle = "red";
     c.moveTo(startX, startY);
     c.lineWidth = 10
-    c.lineTo(startX + (endX - startX) * start.amount, startY + (endY - startY) * start.amount);
+    c.lineTo(startX + (endX - startX) * amount, startY + (endY - startY) * amount);
     c.stroke();
     c.closePath()
 }
@@ -130,15 +142,14 @@ function crtajKrug(centar, rad){
     
     c.fillStyle = 'red'
     c.fill()
-    //c.fillStyle = "black"
-    ////c.font =  '15pt Calibri';
-    //c.textAlign = "center"
-    //c.textBaseline = "middle"
-    //c.fillText(cvor.kljuc /*+ " ("+cvor.x + ", " + cvor.y+") " + cvor.novaPoz*/, centarX + cvor.x*vel,  offsetY + cvor.y*vel)
+    c.fillStyle = "black"
+    c.font =  '15pt Calibri';
+    c.textAlign = "center"
+    c.textBaseline = "middle"
+    if (rad > 0)
+    c.fillText(centar.kljuc /*+ " ("+cvor.x + ", " + cvor.y+") " + cvor.novaPoz*/, centarX + centar.x*vel,  offsetY + centar.y*vel)
     c.closePath()
 }
-
-var putIndex = 0
 
 function crtaj(){
     if (stablo.korijen){

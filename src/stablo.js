@@ -26,6 +26,7 @@ class Stablo{
             y = x
             put.push(
                 {
+                    kljuc: x.kljuc,
                     x: x.x, 
                     y: x.y
                 })
@@ -57,6 +58,7 @@ class Stablo{
         this.novi = z
         put.push(
             {
+                kljuc: z.kljuc,
                 x: z.x,
                 y: z.y
             })
