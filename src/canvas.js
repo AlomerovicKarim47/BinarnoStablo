@@ -222,5 +222,5 @@ function crtaj(){
     requestAnimationFrame(crtaj)
     
 }
-console.log(insertKod)
+
 crtaj()
