@@ -25,15 +25,15 @@ class Stablo{
         while (x != null){
             y = x
             put.push(
-                {
+                /*{
                     kljuc: x.kljuc,
                     x: x.x, 
                     y: x.y
-                })
+                }*/x)
             if (z.kljuc < x.kljuc){
                 x = x.lijevo
             }
-            else{ 
+            else{
                 x = x.desno
             }
             posY++
@@ -57,11 +57,11 @@ class Stablo{
         z.y = posY
         this.novi = z
         put.push(
-            {
+            /*{
                 kljuc: z.kljuc,
                 x: z.x,
                 y: z.y
-            })
+            }*/z)
 
         //provjeri ima li cvorova sa istim x koordinatama 
         var c = z.roditelj

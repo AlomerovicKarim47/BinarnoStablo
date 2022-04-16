@@ -1,7 +1,7 @@
 var canvas = document.querySelector('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-var centarX = window.innerWidth/2
+var centarX = window.innerWidth/3
 var offsetY = 50
 var vel = 70 //duzina i sirina celije grida
 var rad = 30 //radius cvorova
@@ -9,7 +9,8 @@ var rad = 30 //radius cvorova
 //Za kontrolu animacije putanje
 var animPut = null
 var putIndex = 0
-
+var kod = null
+var kodIndex = 0
 
 var c = canvas.getContext('2d');
 var stablo = new Stablo()
@@ -19,7 +20,6 @@ var btnInsert = document.getElementById('btnInsert')
 var btnPrint = document.getElementById('btnPrint')
 var btnGenerisi = document.getElementById('btnGenerisi')
 var inputInsert = document.getElementById('inputInsert')
-
 
 //---------------
 
@@ -91,13 +91,15 @@ var pomjeriCvorAnimacija = function(cvor){
     }
     
 }
+
 function crtajPutanjuAnimacija(){
     var cvor = animPut[putIndex]
     if (cvor.radius == rad){
         cvor.amount += 0.03
     }
-    else if (cvor.amount == 0)
+    else if (cvor.amount == 0){
         cvor.radius += 0.8   
+    }
 
     for (var i = 0; i < animPut.length; i++){
         if (i < animPut.length - 1)
@@ -151,12 +153,34 @@ function crtajKrug(centar, rad){
     c.closePath()
 }
 
+function crtajKod(){
+    var i = 0
+    insertKod.forEach(l => {
+        c.beginPath()
+        if (kodIndex == i)
+            c.fillStyle = "black"
+        else
+            c.fillStyle = "white"
+        c.fillRect(centarX + 400, offsetY + i*32, 300, 32)
+        c.stroke()
+        if (kodIndex == i)
+            c.fillStyle = "white"
+        else
+            c.fillStyle = "black"
+        c.textAlign = "left"
+        c.textBaseline = "top"
+        c.fillText(l, centarX + 400, offsetY + i*32)
+        c.closePath()
+        i++
+    });
+}
+
 function crtaj(){
     if (stablo.korijen){
         c.clearRect(0,0, canvas.width, canvas.height)
-        
         stablo.postorder(stablo.korijen, crtajCvor)
-        if (animPut){
+        if (animPut){          
+            crtajKod()
             crtajPutanjuAnimacija()
         }
         if (stablo.pomjeri && !animPut){ //Pomjeri samo ako je animacija puta gotova
@@ -171,6 +195,5 @@ function crtaj(){
     requestAnimationFrame(crtaj)
     
 }
-
+console.log(insertKod)
 crtaj()
-//setInterval(crtaj, 60)
