@@ -6,6 +6,11 @@ var offsetY = 50
 var vel = 70 //duzina i sirina celije grida
 var rad = 30 //radius cvorova
 
+//Brzine animacije
+var radInc = 0.5
+var amountInc = 0.01
+var pomInc = 0.1
+
 //Za kontrolu animacije putanje
 var animPut = null
 var putIndex = 0
@@ -76,10 +81,10 @@ var crtajCvor = function(cvor){
 
 var pomjeriCvorAnimacija = function(cvor){
     if (cvor.x >= 0 && cvor.x < cvor.novaPoz){
-        cvor.x += 0.1
+        cvor.x += pomInc
     }
     else if (cvor.x <= 0 && cvor.x > cvor.novaPoz){
-        cvor.x -= 0.1
+        cvor.x -= pomInc
     }
     if (cvor. x > 0 && cvor.x >= cvor.novaPoz){
         cvor.x = Math.round(cvor.x)
@@ -95,10 +100,22 @@ var pomjeriCvorAnimacija = function(cvor){
 function crtajPutanjuAnimacija(){
     var cvor = animPut[putIndex]
     if (cvor.radius == rad){
-        cvor.amount += 0.03
+        cvor.amount += amountInc
+        if (stablo.novi.kljuc < cvor.kljuc)
+            kodIndex = 2
+        else
+            kodIndex = 4
     }
     else if (cvor.amount == 0){
-        cvor.radius += 0.8   
+        if (putIndex < animPut.length - 1){
+            if (stablo.novi.kljuc < cvor.kljuc)
+                kodIndex = 1
+            else
+                kodIndex = 3
+        }
+        else
+            kodIndex = 5
+        cvor.radius += radInc   
     }
 
     for (var i = 0; i < animPut.length; i++){
@@ -107,18 +124,26 @@ function crtajPutanjuAnimacija(){
         crtajKrug(animPut[i], animPut[i].radius)
     }
 
-    if (cvor.radius > rad)
+    if (cvor.radius >= rad)
+    {
         cvor.radius = rad
+        if (putIndex >= animPut.length-1){
+            putIndex = 0
+            animPut = null
+            stablo.novi = null
+            return
+        }
+    }
 
     if (cvor.amount > 1){
         cvor.amount = 1
         if (putIndex < animPut.length-1)
             putIndex++
-        else{
+        /*else{
             putIndex = 0
             animPut = null
             stablo.novi = null
-        }
+        }*/
     }
 }
 

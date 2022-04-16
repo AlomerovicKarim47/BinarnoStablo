@@ -1,7 +1,7 @@
 const insertKod = 
-`WHILE ovajKljuc NOT NIL
-IF noviKljuc < ovajKljuc
-    idi u LIJEVO podstablo
-ELSE
-    idi u DESNO podstablo
+`WHILE kljuc NOT NIL
+    IF noviKljuc < kljuc
+        idi u LIJEVO podstablo
+    IF noviKljuc > kljuc
+        idi u DESNO podstablo
 napravi novi cvor`.split("\n")
