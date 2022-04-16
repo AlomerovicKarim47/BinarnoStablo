@@ -14,6 +14,8 @@ var pomInc = 0.1
 //Za kontrolu animacije putanje
 var animPut = null
 var putIndex = 0
+
+//Za highlightovanje linije koda
 var kod = null
 var kodIndex = 0
 
