@@ -6,11 +6,6 @@ var offsetY = 50
 var vel = 70 //duzina i sirina celije grida
 var rad = 30 //radius cvorova
 
-//Brzine animacije
-var radInc = 0.5
-var amountInc = 0.01
-var pomInc = 0.1
-
 //Za kontrolu animacije putanje
 var animPut = null
 var putIndex = 0
@@ -27,6 +22,25 @@ var btnInsert = document.getElementById('btnInsert')
 var btnPrint = document.getElementById('btnPrint')
 var btnGenerisi = document.getElementById('btnGenerisi')
 var inputInsert = document.getElementById('inputInsert')
+var slideBrzina = document.getElementById('slideBrzina')
+var textBrzina = document.getElementById('textBrzina')
+
+//Brzine animacije
+var brzina = slideBrzina.value //* 0.5
+var radInc = 0.5 * brzina
+var amountInc = 0.01 * brzina 
+var pomInc = 0.1 * brzina
+
+//Slider za brzinu
+textBrzina.innerHTML = brzina
+slideBrzina.oninput = function(){
+    textBrzina.innerHTML = this.value //* 0.5
+    brzina = this.value //* 0.5
+    radInc = 0.5 * brzina
+    amountInc = 0.01 * brzina 
+    pomInc = 0.1 * brzina
+}
+
 
 //---------------
 
@@ -48,7 +62,7 @@ btnInsert.onclick = function(){
 }
 
 btnPrint.onclick = function(){
-    stablo.postorder(stablo.korijen, function(x){console.log(x.kljuc, x.x, x.y)})
+    //stablo.postorder(stablo.korijen, function(x){console.log(x.kljuc, x.x, x.y)})
 }
 
 var crtajCvor = function(cvor){
