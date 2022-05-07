@@ -51,6 +51,8 @@ btnObilazak.onclick = function(){
     animPut = stablo.obilazak
     stablo.obilazak = []
     op = "OB"
+    btnObilazak.disabled = true
+    btnInsert.disabled = true
 }
 
 
@@ -63,6 +65,7 @@ btnGenerisi.onclick = function(){
     stablo.insert(1)
     stablo.insert(4)
     stablo.novi = null
+    btnGenerisi.disabled = true
 }
 
 btnInsert.onclick = function(){
@@ -70,6 +73,8 @@ btnInsert.onclick = function(){
     animPut = stablo.insert(x)
     inputInsert.value = null
     op = "INS"
+    btnInsert.disabled = true
+    btnObilazak.disabled = true
 }
 
 var crtajCvor = function(cvor){
@@ -167,6 +172,8 @@ function crtajPutanjuAnimacija(){
             putIndex = 0
             animPut = null
             stablo.novi = null
+            btnInsert.disabled = false
+            btnObilazak.disabled = false
             return
         }
         /*if (animPut[putIndex + 1].rezi){
