@@ -44,7 +44,9 @@ slideBrzina.oninput = function(){
 
 //---------------
 
-
+function getRndInteger(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) ) + min;
+}
 
 btnObilazak.onclick = function(){
     stablo.preorder(stablo.korijen, (x) => console.log(x.kljuc), true)
@@ -56,25 +58,54 @@ btnObilazak.onclick = function(){
 }
 
 
-btnGenerisi.onclick = function(){ 
-    stablo.insert(6)
+btnGenerisi.onclick = function(){
+    
+    for (var i = 0; i < 9; i++){
+        var x = getRndInteger(0,100)
+        if (stablo.lista.filter((n) => n.kljuc == x).length > 0)
+            continue
+        stablo.insert(x)
+        //izbjegni animaciju
+        if (stablo.pomjeri && !animPut){
+            while (stablo.pomjeri){
+            stablo.postorder(stablo.korijen, /*function(cv) {
+                if (cv.novaPoz && cv.x != cv.novaPoz){
+                    console.log(cv.kljuc + " " + cv.x + " " + cv.novaPoz)
+                    cv.x = cv.novaPoz
+                    cv.novaPoz = null
+                }
+            }*/ pomjeriCvorAnimacija)
+            stablo.progres += 0.1
+            if (stablo.progres >= 1){
+                stablo.progres = 0
+                stablo.pomjeri = false
+            }
+            }
+        }
+    }
+    /*stablo.insert(6)
     stablo.insert(9)
     stablo.insert(10)
     stablo.insert(90)
     stablo.insert(89)
     stablo.insert(1)
-    stablo.insert(4)
+    stablo.insert(4)*/
     stablo.novi = null
+    
     btnGenerisi.disabled = true
 }
 
 btnInsert.onclick = function(){
+    
     var x = parseInt(inputInsert.value)
+    if (stablo.lista.filter((n) => n.kljuc == x).length > 0)
+        return
     animPut = stablo.insert(x)
     inputInsert.value = null
     op = "INS"
     btnInsert.disabled = true
     btnObilazak.disabled = true
+    btnGenerisi.disabled = true
 }
 
 var crtajCvor = function(cvor){

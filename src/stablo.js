@@ -14,10 +14,12 @@ class Stablo{
     korijen = null
     pomjeri = false
     novi = null
+    lista = []
     insert(kljuc){
         if (!kljuc)
             return
         var z = new Cvor(kljuc)
+        this.lista.push(z)
         var y = null
         var x = this.korijen
         var posY = 0
