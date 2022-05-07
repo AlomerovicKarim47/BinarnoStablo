@@ -24,12 +24,7 @@ class Stablo{
         var put = []
         while (x != null){
             y = x
-            put.push(
-                /*{
-                    kljuc: x.kljuc,
-                    x: x.x, 
-                    y: x.y
-                }*/x)
+            put.push(x)
             if (z.kljuc < x.kljuc){
                 x = x.lijevo
             }
@@ -56,12 +51,7 @@ class Stablo{
         
         z.y = posY
         this.novi = z
-        put.push(
-            /*{
-                kljuc: z.kljuc,
-                x: z.x,
-                y: z.y
-            }*/z)
+        put.push(z)
 
         //provjeri ima li cvorova sa istim x koordinatama 
         var c = z.roditelj
@@ -114,12 +104,36 @@ class Stablo{
         return put
     }
     obilazak = []
-    postorder(x, operacija){
-        this.obilazak.push({...x, radius: 0, amount: 0})
+    postorder(x, operacija, napraviPut = false){
+        
+        /*if (napraviPut){
+            if (x.desnoDijete && x.roditelj.lijevo)
+                this.obilazak.push({...x.roditelj, radius:0, amount:0, rezi: true})
+            this.obilazak.push({...x, radius: 0, amount: 0})
+        }*/
         if (x.lijevo)
-            this.postorder(x.lijevo, operacija)
+            this.postorder(x.lijevo, operacija, napraviPut)
         if (x.desno)
-            this.postorder(x.desno, operacija)
+            this.postorder(x.desno, operacija, napraviPut)
         operacija(x)
+    }
+
+    preorder(x, operacija, napraviPut = false){
+        if (napraviPut){
+            //if (x.desnoDijete && x.roditelj.lijevo)
+            //    this.obilazak.push({...x.roditelj, radius:0, amount:0, rezi: true})
+            this.obilazak.push({...x, radius: 0, amount: 0})
+        }
+        operacija(x)
+        if (x.lijevo){
+            this.preorder(x.lijevo, operacija, napraviPut)
+            this.obilazak.push({...x, radius: 0, amount: 0, backtrack: true})
+        }
+        if (x.desno){
+            this.preorder(x.desno, operacija, napraviPut)
+            this.obilazak.push({...x,radius: 0, amount: 0, backtrack: true})
+        }
+        if (!(x.desno || x.lijevo))
+            this.obilazak.push({...x,radius: 0, amount: 0, backtrack: true})
     }
 }

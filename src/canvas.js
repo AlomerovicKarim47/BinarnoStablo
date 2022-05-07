@@ -47,8 +47,10 @@ slideBrzina.oninput = function(){
 
 
 btnObilazak.onclick = function(){
-    stablo.postorder(stablo.korijen, (x) => console.log(x.kljuc))
+    stablo.preorder(stablo.korijen, (x) => console.log(x.kljuc), true)
     animPut = stablo.obilazak
+    stablo.obilazak = []
+    op = "OB"
 }
 
 
@@ -67,6 +69,7 @@ btnInsert.onclick = function(){
     var x = parseInt(inputInsert.value)
     animPut = stablo.insert(x)
     inputInsert.value = null
+    op = "INS"
 }
 
 var crtajCvor = function(cvor){
@@ -123,22 +126,23 @@ function crtajPutanjuAnimacija(){
     var cvor = animPut[putIndex]
     if (cvor.radius == rad){
         cvor.amount += amountInc
-        
-        if (stablo.novi.kljuc < cvor.kljuc)
-            kodIndex = 2
-        else
-            kodIndex = 4
+        if (op == "INS")
+            if (stablo.novi.kljuc < cvor.kljuc)
+                kodIndex = 2
+            else
+                kodIndex = 4
     }
     else if (cvor.amount == 0){
         if (putIndex < animPut.length - 1){
-            
-        if (stablo.novi.kljuc < cvor.kljuc)
-            kodIndex = 1
-        else
-            kodIndex = 3
+            if (op == "INS")
+                if (stablo.novi.kljuc < cvor.kljuc)
+                    kodIndex = 1
+                else
+                    kodIndex = 3
         }
         else
-            kodIndex = 5
+            if (op == "INS")
+                kodIndex = 5
         cvor.radius += radInc   
     }
 
@@ -146,6 +150,14 @@ function crtajPutanjuAnimacija(){
         if (i < animPut.length - 1)
             crtajLiniju(animPut[i], animPut[i + 1], animPut[i].amount)
         crtajKrug(animPut[i], animPut[i].radius)
+
+        if (op == "OB"){
+            c.beginPath()
+            c.font = "30pt Calibri"
+            c.fillStyle = "red"
+            c.fillText("^", centarX + cvor.x*vel, offsetY + cvor.y*vel+ 50)
+            c.closePath()
+        }
     }
 
     if (cvor.radius >= rad)
@@ -157,17 +169,20 @@ function crtajPutanjuAnimacija(){
             stablo.novi = null
             return
         }
+        /*if (animPut[putIndex + 1].rezi){
+            animPut[putIndex + 1].radius = rad
+            putIndex++
+            
+        }*/
+        if (animPut[putIndex + 1].backtrack){
+            putIndex++
+        }
     }
 
     if (cvor.amount > 1){
         cvor.amount = 1
         if (putIndex < animPut.length-1)
             putIndex++
-        /*else{
-            putIndex = 0
-            animPut = null
-            stablo.novi = null
-        }*/
     }
 }
 
@@ -198,7 +213,7 @@ function crtajKrug(centar, rad){
     c.textAlign = "center"
     c.textBaseline = "middle"
     if (rad > 0)
-    c.fillText(centar.kljuc /*+ " ("+cvor.x + ", " + cvor.y+") " + cvor.novaPoz*/, centarX + centar.x*vel,  offsetY + centar.y*vel)
+        c.fillText(centar.kljuc, centarX + centar.x*vel,  offsetY + centar.y*vel)
     c.closePath()
 }
 
