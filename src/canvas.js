@@ -19,7 +19,7 @@ var stablo = new Stablo()
 
 //Html elementi
 var btnInsert = document.getElementById('btnInsert')
-var btnPrint = document.getElementById('btnPrint')
+var btnObilazak = document.getElementById('btnObilazak')
 var btnGenerisi = document.getElementById('btnGenerisi')
 var inputInsert = document.getElementById('inputInsert')
 var slideBrzina = document.getElementById('slideBrzina')
@@ -44,6 +44,14 @@ slideBrzina.oninput = function(){
 
 //---------------
 
+
+
+btnObilazak.onclick = function(){
+    stablo.postorder(stablo.korijen, (x) => console.log(x.kljuc))
+    animPut = stablo.obilazak
+}
+
+
 btnGenerisi.onclick = function(){ 
     stablo.insert(6)
     stablo.insert(9)
@@ -59,10 +67,6 @@ btnInsert.onclick = function(){
     var x = parseInt(inputInsert.value)
     animPut = stablo.insert(x)
     inputInsert.value = null
-}
-
-btnPrint.onclick = function(){
-    //stablo.postorder(stablo.korijen, function(x){console.log(x.kljuc, x.x, x.y)})
 }
 
 var crtajCvor = function(cvor){
@@ -113,10 +117,13 @@ var pomjeriCvorAnimacija = function(cvor){
     
 }
 
+var op = "X"
+
 function crtajPutanjuAnimacija(){
     var cvor = animPut[putIndex]
     if (cvor.radius == rad){
         cvor.amount += amountInc
+        
         if (stablo.novi.kljuc < cvor.kljuc)
             kodIndex = 2
         else
@@ -124,10 +131,11 @@ function crtajPutanjuAnimacija(){
     }
     else if (cvor.amount == 0){
         if (putIndex < animPut.length - 1){
-            if (stablo.novi.kljuc < cvor.kljuc)
-                kodIndex = 1
-            else
-                kodIndex = 3
+            
+        if (stablo.novi.kljuc < cvor.kljuc)
+            kodIndex = 1
+        else
+            kodIndex = 3
         }
         else
             kodIndex = 5

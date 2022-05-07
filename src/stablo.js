@@ -113,7 +113,9 @@ class Stablo{
         })
         return put
     }
+    obilazak = []
     postorder(x, operacija){
+        this.obilazak.push({...x, radius: 0, amount: 0})
         if (x.lijevo)
             this.postorder(x.lijevo, operacija)
         if (x.desno)
