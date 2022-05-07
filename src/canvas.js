@@ -263,7 +263,7 @@ function crtajKod(){
             c.fillStyle = "black"
         else
             c.fillStyle = "white"
-        c.fillRect(centarX + 400, offsetY + i*32, 300, 32)
+        c.fillRect(centarX + 700, offsetY + i*32, 300, 32)
         c.stroke()
         if (kodIndex == i)
             c.fillStyle = "white"
@@ -271,7 +271,7 @@ function crtajKod(){
             c.fillStyle = "black"
         c.textAlign = "left"
         c.textBaseline = "top"
-        c.fillText(l, centarX + 400, offsetY + i*32)
+        c.fillText(l, centarX + 700, offsetY + i*32)
         c.closePath()
         i++
     });
