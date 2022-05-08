@@ -30,6 +30,7 @@ var textBrzina = document.getElementById('textBrzina')
 var inputTrazi = document.getElementById('inputTrazi')
 var btnTrazi =document.getElementById('btnTrazi')
 var btnUnfreeze = document.getElementById('btnUnfreeze')
+var txtInfo = document.getElementById('infoText')
 
 //Brzine animacije
 var brzina = slideBrzina.value //* 0.5
@@ -47,24 +48,14 @@ slideBrzina.oninput = function(){
     pomInc = 0.1 * brzina
 }
 
-btnUnfreeze.onclick = function(){
-    freeze = false
-}
-
 //---------------
 
 function getRndInteger(min, max) {
     return Math.floor(Math.random() * (max - min + 1) ) + min;
 }
 
-function brisiAnimaciju(){
-    putIndex = 0
-    animPut = null
-    stablo.novi = null
-}
-
 btnObilazak.onclick = function(){
-    stablo.preorder(stablo.korijen, (x) => console.log(x.kljuc), true)
+    stablo.preorder(stablo.korijen, (x) => {}, true)
     animPut = stablo.obilazak
     stablo.obilazak = []
     op = "OB"
@@ -117,6 +108,10 @@ btnGenerisi.onclick = function(){
     stablo.novi = null
     
     btnGenerisi.disabled = true
+}
+
+btnUnfreeze.onclick = function(){
+    freeze = false
 }
 
 btnInsert.onclick = function(){
@@ -228,11 +223,13 @@ function crtajPutanjuAnimacija(){
         cvor.radius = rad
         if (putIndex >= animPut.length-1){
             btnUnfreeze.disabled = false
+            txtInfo.innerHTML = "Animacija gotova"
             if (!freeze){
                 btnInsert.disabled = false
                 btnObilazak.disabled = false
                 btnTrazi.disabled = false
-
+                btnUnfreeze.disabled = true
+                txtInfo.innerHTML = "Nema animacije"
                 putIndex = 0
                 animPut = null
                 stablo.novi = null            
@@ -315,7 +312,8 @@ function crtaj(){
     if (stablo.korijen){
         c.clearRect(0,0, canvas.width, canvas.height)
         stablo.postorder(stablo.korijen, crtajCvor)
-        if (animPut){          
+        if (animPut){   
+            txtInfo.innerHTML = "Animacija u toku"       
             crtajKod()
             crtajPutanjuAnimacija()
         }
