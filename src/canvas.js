@@ -17,6 +17,9 @@ var kodIndex = 0
 var c = canvas.getContext('2d');
 var stablo = new Stablo()
 
+var freeze = false
+var animGotova = true
+
 //Html elementi
 var btnInsert = document.getElementById('btnInsert')
 var btnObilazak = document.getElementById('btnObilazak')
@@ -24,6 +27,9 @@ var btnGenerisi = document.getElementById('btnGenerisi')
 var inputInsert = document.getElementById('inputInsert')
 var slideBrzina = document.getElementById('slideBrzina')
 var textBrzina = document.getElementById('textBrzina')
+var inputTrazi = document.getElementById('inputTrazi')
+var btnTrazi =document.getElementById('btnTrazi')
+var btnUnfreeze = document.getElementById('btnUnfreeze')
 
 //Brzine animacije
 var brzina = slideBrzina.value //* 0.5
@@ -41,11 +47,20 @@ slideBrzina.oninput = function(){
     pomInc = 0.1 * brzina
 }
 
+btnUnfreeze.onclick = function(){
+    freeze = false
+}
 
 //---------------
 
 function getRndInteger(min, max) {
     return Math.floor(Math.random() * (max - min + 1) ) + min;
+}
+
+function brisiAnimaciju(){
+    putIndex = 0
+    animPut = null
+    stablo.novi = null
 }
 
 btnObilazak.onclick = function(){
@@ -55,8 +70,24 @@ btnObilazak.onclick = function(){
     op = "OB"
     btnObilazak.disabled = true
     btnInsert.disabled = true
+    btnTrazi.disabled = true
+    btnUnfreeze.disabled = true
 }
 
+btnTrazi.onclick = function(){
+    if (!stablo.korijen)
+        return
+    var x = parseInt(inputTrazi.value)
+    var rez = stablo.trazi(stablo.korijen, x)
+    animPut = rez.put
+    inputTrazi.value = null
+    op = "TRA"
+    btnObilazak.disabled = true
+    btnInsert.disabled = true
+    btnGenerisi.disabled = true
+    btnUnfreeze.disabled = true
+    btnTrazi.disabled = true
+}
 
 btnGenerisi.onclick = function(){
     
@@ -83,29 +114,25 @@ btnGenerisi.onclick = function(){
             }
         }
     }
-    /*stablo.insert(6)
-    stablo.insert(9)
-    stablo.insert(10)
-    stablo.insert(90)
-    stablo.insert(89)
-    stablo.insert(1)
-    stablo.insert(4)*/
     stablo.novi = null
     
     btnGenerisi.disabled = true
 }
 
 btnInsert.onclick = function(){
-    
+
+    op = "INS"
     var x = parseInt(inputInsert.value)
     if (stablo.lista.filter((n) => n.kljuc == x).length > 0)
         return
     animPut = stablo.insert(x)
     inputInsert.value = null
-    op = "INS"
+    
     btnInsert.disabled = true
     btnObilazak.disabled = true
     btnGenerisi.disabled = true
+    btnTrazi.disabled = true
+    btnUnfreeze.disabled = true
 }
 
 var crtajCvor = function(cvor){
@@ -200,21 +227,28 @@ function crtajPutanjuAnimacija(){
     {
         cvor.radius = rad
         if (putIndex >= animPut.length-1){
-            putIndex = 0
-            animPut = null
-            stablo.novi = null
-            btnInsert.disabled = false
-            btnObilazak.disabled = false
-            return
+            btnUnfreeze.disabled = false
+            if (!freeze){
+                btnInsert.disabled = false
+                btnObilazak.disabled = false
+                btnTrazi.disabled = false
+
+                putIndex = 0
+                animPut = null
+                stablo.novi = null            
+                return
+            }
         }
         /*if (animPut[putIndex + 1].rezi){
             animPut[putIndex + 1].radius = rad
             putIndex++
             
         }*/
-        if (animPut[putIndex + 1].backtrack){
+        if (putIndex < animPut.length - 1 && animPut[putIndex + 1].backtrack){
             putIndex++
         }
+        else
+            freeze = true
     }
 
     if (cvor.amount > 1){

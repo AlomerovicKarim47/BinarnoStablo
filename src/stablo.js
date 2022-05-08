@@ -138,4 +138,19 @@ class Stablo{
         if (!(x.desno || x.lijevo))
             this.obilazak.push({...x,radius: 0, amount: 0, backtrack: true})
     }
+
+    trazi(x, kljuc, put = []){
+        put.push(x)
+        if (!x || kljuc == x.kljuc){ 
+            var rez = {
+                cvor: x, 
+                put: put.map((c)=>c={...c, amount:0, radius:0})
+            };
+            return rez;
+        }
+        else if (kljuc > x.kljuc)
+            return this.trazi(x.desno, kljuc, put)
+        else if (kljuc < x.kljuc)
+            return this.trazi(x.lijevo, kljuc, put)
+    }
 }
