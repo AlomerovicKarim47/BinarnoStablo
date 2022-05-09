@@ -66,7 +66,7 @@ btnObilazak.onclick = function(){
 }
 
 btnTrazi.onclick = function(){
-    if (!stablo.korijen)
+    if (!stablo.korijen || !inputTrazi.value)
         return
     op = "TRA"
     var x = parseInt(inputTrazi.value)
@@ -78,6 +78,8 @@ btnTrazi.onclick = function(){
     btnGenerisi.disabled = true
     btnUnfreeze.disabled = true
     btnTrazi.disabled = true
+    inputInsert.disabled = true
+    inputTrazi.disabled = true
 }
 
 btnGenerisi.onclick = function(){
@@ -124,6 +126,8 @@ btnInsert.onclick = function(){
     btnGenerisi.disabled = true
     btnTrazi.disabled = true
     btnUnfreeze.disabled = true
+    inputInsert.disabled = true
+    inputTrazi.disabled = true
 }
 
 var crtajCvor = function(cvor){
@@ -266,7 +270,7 @@ function crtajPutanjuAnimacija(){
             crtajLiniju(animPut[i], animPut[i + 1], animPut[i].amount)
         crtajKrug(animPut[i], animPut[i].radius)
 
-        if (op == "OB"){
+        if (op == "OB" || (op == "TRA" && animPut[putIndex].kljuc == parseInt(inputTrazi.value))){
             c.beginPath()
             c.font = "30pt Calibri"
             c.fillStyle = "red"
@@ -286,6 +290,8 @@ function crtajPutanjuAnimacija(){
                 btnObilazak.disabled = false
                 btnTrazi.disabled = false
                 btnUnfreeze.disabled = true
+                inputInsert.disabled = false
+                inputTrazi.disabled = false
                 txtInfo.innerHTML = "Nema animacije"
                 putIndex = 0
                 animPut = null
