@@ -31,6 +31,7 @@ var inputTrazi = document.getElementById('inputTrazi')
 var btnTrazi =document.getElementById('btnTrazi')
 var btnUnfreeze = document.getElementById('btnUnfreeze')
 var txtInfo = document.getElementById('infoText')
+var btnPause = document.getElementById('btnPause')
 
 //Brzine animacije
 var brzina = slideBrzina.value //* 0.5
@@ -38,20 +39,48 @@ var radInc = 0.5 * brzina
 var amountInc = 0.01 * brzina 
 var pomInc = 0.1 * brzina
 
+var amountInc2 = amountInc
+var radInc2 = radInc
+var pomInc2 = pomInc
+
 //Slider za brzinu
 textBrzina.innerHTML = brzina
 slideBrzina.oninput = function(){
-    textBrzina.innerHTML = this.value //* 0.5
-    brzina = this.value //* 0.5
-    radInc = 0.5 * brzina
-    amountInc = 0.01 * brzina 
-    pomInc = 0.1 * brzina
+    textBrzina.innerHTML = this.value
+    brzina = this.value
+    if (radInc > 0){
+        radInc = 0.5 * brzina
+        amountInc = 0.01 * brzina 
+        pomInc = 0.1 * brzina
+        radInc2 = radInc
+        amountInc2 = amountInc
+        pomInc2 = pomInc
+    }
+    else{
+        radInc2 = 0.5 * brzina
+        amountInc2 = 0.01 * brzina 
+        pomInc2 = 0.1 * brzina
+    }
 }
 
 //---------------
 
 function getRndInteger(min, max) {
     return Math.floor(Math.random() * (max - min + 1) ) + min;
+}
+
+btnPause.onclick = function(){
+    if (btnPause.innerHTML == "Pauziraj"){
+        btnPause.innerHTML = "Nastavi"
+        radInc = 0
+        amountInc = 0
+    }
+    else{
+        btnPause.innerHTML = "Pauziraj"
+        radInc = radInc2
+        amountInc = amountInc2
+        pomInc = pomInc2
+    }
 }
 
 btnObilazak.onclick = function(){
@@ -63,6 +92,7 @@ btnObilazak.onclick = function(){
     btnInsert.disabled = true
     btnTrazi.disabled = true
     btnUnfreeze.disabled = true
+    btnPause.disabled = false
 }
 
 btnTrazi.onclick = function(){
@@ -80,6 +110,7 @@ btnTrazi.onclick = function(){
     btnTrazi.disabled = true
     inputInsert.disabled = true
     inputTrazi.disabled = true
+    btnPause.disabled = false
 }
 
 btnGenerisi.onclick = function(){
@@ -128,6 +159,7 @@ btnInsert.onclick = function(){
     btnUnfreeze.disabled = true
     inputInsert.disabled = true
     inputTrazi.disabled = true
+    btnPause.disabled = false
 }
 
 var crtajCvor = function(cvor){
@@ -292,6 +324,7 @@ function crtajPutanjuAnimacija(){
                 btnUnfreeze.disabled = true
                 inputInsert.disabled = false
                 inputTrazi.disabled = false
+                btnPause.disabled = true
                 txtInfo.innerHTML = "Nema animacije"
                 putIndex = 0
                 animPut = null
