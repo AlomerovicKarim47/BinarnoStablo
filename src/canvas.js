@@ -32,6 +32,7 @@ var btnTrazi =document.getElementById('btnTrazi')
 var btnUnfreeze = document.getElementById('btnUnfreeze')
 var txtInfo = document.getElementById('infoText')
 var btnPause = document.getElementById('btnPause')
+var slideAnim = document.getElementById('slideAnim')
 
 //Brzine animacije
 var brzina = slideBrzina.value //* 0.5
@@ -83,10 +84,28 @@ btnPause.onclick = function(){
     }
 }
 
+slideAnim.oninput = function(){
+    let frame = parseInt(this.value)
+    putIndex = frame
+    if (frame < animPut.length)
+        btnUnfreeze.disabled = true
+    for (var i = 0; i < frame; i++){
+        animPut[i].amount = 1
+        animPut[i].radius = rad
+    }
+    for (var i = frame; i < animPut.length; i++){
+        animPut[i].amount = 0
+        animPut[i].radius = 0
+    }
+}
+
 btnObilazak.onclick = function(){
     op = "OB"
     stablo.preorder(stablo.korijen, (x) => {}, true)
     animPut = stablo.obilazak
+    slideAnim.disabled = false
+    slideAnim.value = 0
+    slideAnim.max = animPut.length - 1
     stablo.obilazak = []
     btnObilazak.disabled = true
     btnInsert.disabled = true
@@ -102,6 +121,9 @@ btnTrazi.onclick = function(){
     var x = parseInt(inputTrazi.value)
     var rez = stablo.trazi(stablo.korijen, x)
     animPut = rez.put
+    slideAnim.max = animPut.length - 1
+    slideAnim.disabled = false
+    slideAnim.value = 0
     //inputTrazi.value = null
     btnObilazak.disabled = true
     btnInsert.disabled = true
@@ -141,6 +163,13 @@ btnUnfreeze.onclick = function(){
     freeze = false
     inputTrazi.value = null
     inputInsert.value = null
+    slideAnim.disabled = true
+    slideAnim.value = 0
+    //animPut = null
+    /*for (var i = 0; i < animPut.length; i++){
+        animPut[i].amount = 0
+        animPut[i].rad = 0
+    }*/
 }
 
 btnInsert.onclick = function(){
@@ -150,6 +179,9 @@ btnInsert.onclick = function(){
     if (stablo.lista.filter((n) => n.kljuc == x).length > 0)
         return
     animPut = stablo.insert(x)
+    slideAnim.disabled = false
+    slideAnim.max = animPut.length - 1
+    slideAnim.value = 0
     //inputInsert.value = null
     
     btnInsert.disabled = true
@@ -339,6 +371,7 @@ function crtajPutanjuAnimacija(){
         }*/
         if (putIndex < animPut.length - 1 && animPut[putIndex + 1].backtrack){
             putIndex++
+            slideAnim.value = putIndex
         }
         else
             freeze = true
@@ -348,6 +381,7 @@ function crtajPutanjuAnimacija(){
         cvor.amount = 1
         if (putIndex < animPut.length-1)
             putIndex++
+            slideAnim.value = putIndex
     }
 }
 
