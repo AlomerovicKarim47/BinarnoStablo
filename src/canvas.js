@@ -55,10 +55,10 @@ function getRndInteger(min, max) {
 }
 
 btnObilazak.onclick = function(){
+    op = "OB"
     stablo.preorder(stablo.korijen, (x) => {}, true)
     animPut = stablo.obilazak
     stablo.obilazak = []
-    op = "OB"
     btnObilazak.disabled = true
     btnInsert.disabled = true
     btnTrazi.disabled = true
@@ -68,11 +68,11 @@ btnObilazak.onclick = function(){
 btnTrazi.onclick = function(){
     if (!stablo.korijen)
         return
+    op = "TRA"
     var x = parseInt(inputTrazi.value)
     var rez = stablo.trazi(stablo.korijen, x)
     animPut = rez.put
-    inputTrazi.value = null
-    op = "TRA"
+    //inputTrazi.value = null
     btnObilazak.disabled = true
     btnInsert.disabled = true
     btnGenerisi.disabled = true
@@ -90,13 +90,7 @@ btnGenerisi.onclick = function(){
         //izbjegni animaciju
         if (stablo.pomjeri && !animPut){
             while (stablo.pomjeri){
-            stablo.postorder(stablo.korijen, /*function(cv) {
-                if (cv.novaPoz && cv.x != cv.novaPoz){
-                    console.log(cv.kljuc + " " + cv.x + " " + cv.novaPoz)
-                    cv.x = cv.novaPoz
-                    cv.novaPoz = null
-                }
-            }*/ pomjeriCvorAnimacija)
+            stablo.postorder(stablo.korijen, pomjeriCvorAnimacija)
             stablo.progres += 0.1
             if (stablo.progres >= 1){
                 stablo.progres = 0
@@ -112,6 +106,8 @@ btnGenerisi.onclick = function(){
 
 btnUnfreeze.onclick = function(){
     freeze = false
+    inputTrazi.value = null
+    inputInsert.value = null
 }
 
 btnInsert.onclick = function(){
@@ -121,7 +117,7 @@ btnInsert.onclick = function(){
     if (stablo.lista.filter((n) => n.kljuc == x).length > 0)
         return
     animPut = stablo.insert(x)
-    inputInsert.value = null
+    //inputInsert.value = null
     
     btnInsert.disabled = true
     btnObilazak.disabled = true
@@ -175,43 +171,96 @@ var pomjeriCvorAnimacija = function(cvor){
         cvor.x = Math.round(cvor.x)
         cvor.novaPoz = null
     }
-    
 }
 
 var op = "X"
 var animDio = null
 
-function azurirajKodIndex(){
-    if (animDio == "maxRad"){
-
+function azurirajKodIndex(cvor){
+    if (op == "INS"){
+        if (animDio == "maxRad"){ 
+            if (!cvor.desno && !cvor.lijevo)
+                return
+            else if (stablo.novi.kljuc < cvor.kljuc)
+                kodIndex = 2
+            else
+                kodIndex = 4
+        }
+        else if (animDio == "amount0NotEnd"){   
+            if (stablo.novi.kljuc < cvor.kljuc)
+                kodIndex = 1
+            else
+                kodIndex = 3
+        }
+        else if (animDio == "amount0IsEnd"){
+            kodIndex = 5
+        }
     }
-    else if (animDio == ""){}
+    else if (op == "OB"){
+        if (animDio == "maxRad" && putIndex < animPut.length - 1){
+            if (animPut[putIndex + 1].lijevoDijete)
+                kodIndex = 3 //lijevo
+            else if (animPut[putIndex + 1].desnoDijete)
+                kodIndex = 4 //desno
+        }
+        else if (animDio == "amount0NotEnd"){
+            if (animPut[putIndex].backtrack)
+                kodIndex = 1
+            else
+                kodIndex = 2 //obiđi
+        }
+        else if (animDio == "amount0IsEnd")
+            kodIndex = 1 //return
+    }
+    else if (op == "TRA"){
+        var trazeno = parseInt(inputTrazi.value)
+        if (animDio == "maxRad" ){
+            if (putIndex < animPut.length - 1){
+                if (animPut[putIndex + 1].lijevoDijete)
+                    kodIndex = 7 //trazi lijevo
+                else if (animPut[putIndex + 1].desnoDijete)
+                    kodIndex = 5 //traziDesno
+            }
+            else{
+                if (animPut[putIndex].kljuc == trazeno)
+                    kodIndex = 3
+                else 
+                    kodIndex = 1
+            }
+        }
+        else if (animDio == "amount0NotEnd"){
+            if (animPut[putIndex + 1].lijevoDijete)
+                kodIndex = 6 //if cvor < trazeno
+            else if (animPut[putIndex + 1].desnoDijete)
+                kodIndex = 4 //if cvor > trazeno
+            
+        }
+        else if (animDio == "amount0IsEnd"){
+            if (animPut[putIndex].kljuc == trazeno)
+                kodIndex = 2 // if cvor == trazeno
+            else
+                kodIndex = 0
+        }
+    }
 }
 
 function crtajPutanjuAnimacija(){
     var cvor = animPut[putIndex]
     if (cvor.radius == rad){
         cvor.amount += amountInc
-        if (op == "INS")
-            if (stablo.novi.kljuc < cvor.kljuc)
-                kodIndex = 2
-            else
-                kodIndex = 4
+        animDio = "maxRad"
     }
     else if (cvor.amount == 0){
         if (putIndex < animPut.length - 1){
-            if (op == "INS")
-                if (stablo.novi.kljuc < cvor.kljuc)
-                    kodIndex = 1
-                else
-                    kodIndex = 3
+            animDio = "amount0NotEnd"
         }
         else
-            if (op == "INS")
-                kodIndex = 5
+            animDio = "amount0IsEnd"
         cvor.radius += radInc   
     }
 
+    azurirajKodIndex(cvor)
+    
     for (var i = 0; i < animPut.length; i++){
         if (i < animPut.length - 1)
             crtajLiniju(animPut[i], animPut[i + 1], animPut[i].amount)
@@ -296,24 +345,33 @@ function crtajKrug(centar, rad){
 
 function crtajKod(){
     var i = 0
-    insertKod.forEach(l => {
-        c.beginPath()
-        if (kodIndex == i)
-            c.fillStyle = "black"
-        else
-            c.fillStyle = "white"
-        c.fillRect(centarX + 700, offsetY + i*32, 300, 32)
-        c.stroke()
-        if (kodIndex == i)
-            c.fillStyle = "white"
-        else
-            c.fillStyle = "black"
-        c.textAlign = "left"
-        c.textBaseline = "top"
-        c.fillText(l, centarX + 700, offsetY + i*32)
-        c.closePath()
-        i++
-    });
+    var kod = null
+    if (op == "INS")
+        kod = insertKod
+    else if (op == "OB")
+        kod = obilazakKod
+    else if (op == "TRA")
+        kod = traziKod
+    
+    if (kod)
+        kod.forEach(l => {
+            c.beginPath()
+            if (kodIndex == i)
+                c.fillStyle = "black"
+            else
+                c.fillStyle = "white"
+            c.fillRect(centarX + 700, offsetY + i*32, 300, 32)
+            c.stroke()
+            if (kodIndex == i)
+                c.fillStyle = "white"
+            else
+                c.fillStyle = "black"
+            c.textAlign = "left"
+            c.textBaseline = "top"
+            c.fillText(l, centarX + 700, offsetY + i*32)
+            c.closePath()
+            i++
+        });
 }
 
 function crtaj(){
