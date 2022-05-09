@@ -179,6 +179,14 @@ var pomjeriCvorAnimacija = function(cvor){
 }
 
 var op = "X"
+var animDio = null
+
+function azurirajKodIndex(){
+    if (animDio == "maxRad"){
+
+    }
+    else if (animDio == ""){}
+}
 
 function crtajPutanjuAnimacija(){
     var cvor = animPut[putIndex]
