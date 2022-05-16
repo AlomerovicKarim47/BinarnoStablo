@@ -109,17 +109,23 @@ class Stablo{
 
     inorder(x, operacija, napraviPut = false){
         if (napraviPut){
-
+            this.obilazak.push({...x, radius:0, amount:0, visited:false})
         }
         if (x.lijevo){
             this.inorder(x.lijevo, operacija, napraviPut)
+            if (napraviPut)
+                this.obilazak.push({...x, radius:0, amount:0, visited:true, backtrack:true})
         }
         operacija(x)
+        if (napraviPut && !x.lijevo && x.desno)
+                this.obilazak.push({...x, radius:0, amount:0, visited:true})
         if (x.desno){
             this.inorder(x.desno, operacija, napraviPut)
+            if (napraviPut)
+                this.obilazak.push({...x, radius:0, amount:0, visited:true, backtrack:true})
         }
-        if (!(x.desno || x.lijevo)){
-            
+        if (!(x.desno || x.lijevo) && napraviPut){
+            this.obilazak.push({...x, radius:0, amount:0, visited:true})
         }
     }
 

@@ -100,6 +100,24 @@ slideAnim.oninput = function(){
     }
 }
 
+btnInorder.onclick = function(){
+    op = "IN"
+    stablo.inorder(stablo.korijen, () => {}, true)
+    animPut = stablo.obilazak
+
+    slideAnim.disabled = false
+    slideAnim.value = 0
+    slideAnim.max = animPut.length - 1
+    stablo.obilazak = []
+    btnObilazak.disabled = true
+    btnPostorder.disabled = true
+    btnInorder.disabled = true
+    btnInsert.disabled = true
+    btnTrazi.disabled = true
+    btnUnfreeze.disabled = true
+    btnPause.disabled = false
+}
+
 btnObilazak.onclick = function(){
     op = "OB"
     stablo.preorder(stablo.korijen, (x) => {}, true)
@@ -110,6 +128,7 @@ btnObilazak.onclick = function(){
     stablo.obilazak = []
     btnObilazak.disabled = true
     btnPostorder.disabled = true
+    btnInorder.disabled = true
     btnInsert.disabled = true
     btnTrazi.disabled = true
     btnUnfreeze.disabled = true
@@ -126,6 +145,7 @@ btnPostorder.onclick = function(){
     stablo.obilazak = []
     btnObilazak.disabled = true
     btnPostorder.disabled = true
+    btnInorder.disabled = true
     btnInsert.disabled = true
     btnTrazi.disabled = true
     btnUnfreeze.disabled = true
@@ -146,6 +166,7 @@ btnTrazi.onclick = function(){
     //inputTrazi.value = null
     btnObilazak.disabled = true
     btnPostorder.disabled = true
+    btnInorder.disabled = true
     btnInsert.disabled = true
     btnGenerisi.disabled = true
     btnUnfreeze.disabled = true
@@ -207,6 +228,7 @@ btnInsert.onclick = function(){
     btnInsert.disabled = true
     btnObilazak.disabled = true
     btnPostorder.disabled = true
+    btnInorder.disabled = true
     btnGenerisi.disabled = true
     btnTrazi.disabled = true
     btnUnfreeze.disabled = true
@@ -365,7 +387,7 @@ function crtajPutanjuAnimacija(){
         crtajKrug(animPut[i], animPut[i].radius, animPut[i].visited == false?false:true)
         
 
-        if (op == "OB" || op == "POST" || (op == "TRA" && animPut[putIndex].kljuc == parseInt(inputTrazi.value))){
+        if (op == "OB" || op == "POST" || op == "IN" || (op == "TRA" && animPut[putIndex].kljuc == parseInt(inputTrazi.value))){
             c.beginPath()
             c.font = "30pt Calibri"
             c.fillStyle = "red"
@@ -384,6 +406,7 @@ function crtajPutanjuAnimacija(){
                 btnInsert.disabled = false
                 btnObilazak.disabled = false
                 btnPostorder.disabled = false
+                btnInorder.disabled = false
                 btnTrazi.disabled = false
                 btnUnfreeze.disabled = true
                 inputInsert.disabled = false
@@ -396,11 +419,11 @@ function crtajPutanjuAnimacija(){
                 return
             }
         }
-        if (animPut[putIndex + 1] && animPut[putIndex + 1].rezi){
+        /*if (animPut[putIndex + 1] && animPut[putIndex + 1].rezi){
             //animPut[putIndex + 1].radius = rad
             //putIndex++
             
-        }
+        }*/
         if (putIndex < animPut.length - 1 && animPut[putIndex + 1].backtrack){
             putIndex++
             slideAnim.value = putIndex

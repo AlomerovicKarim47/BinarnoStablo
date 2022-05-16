@@ -18,7 +18,14 @@ const postOrderKod =
         RETURN
     postOrder(LIJEVO podstablo)
     postOrder(DESNO podstablo)
-    OBIĐI cvor`.split("\n") 
+    OBIĐI cvor`.split("\n")
+    
+const inOrderKod = 
+`IF cvor IS NIL
+    RETURN
+inorder(LIJEVO podstablo)
+OBIĐI cvor
+inorder(DESNO podstablo)`.split("\n")
 
 const traziKod = 
     `IF cvor IS NIL
