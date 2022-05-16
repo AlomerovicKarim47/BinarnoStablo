@@ -10,8 +10,15 @@ const obilazakKod =
     `IF cvor IS NIL
         RETURN
     OBIĐI cvor
-    preOrder(cvor.LIJEVO)
-    preOrder(cvor.DESNO)`.split("\n")
+    preOrder(LIJEVO podstablo)
+    preOrder(DESNO podstablo)`.split("\n")
+
+const postOrderKod = 
+    `IF cvor IS NIL
+        RETURN
+    postOrder(LIJEVO podstablo)
+    postOrder(DESNO podstablo)
+    OBIĐI cvor`.split("\n") 
 
 const traziKod = 
     `IF cvor IS NIL

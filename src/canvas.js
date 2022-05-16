@@ -23,6 +23,9 @@ var animGotova = true
 //Html elementi
 var btnInsert = document.getElementById('btnInsert')
 var btnObilazak = document.getElementById('btnObilazak')
+var btnPostorder = document.getElementById('btnPostorder')
+var btnInorder = document.getElementById('btnInorder')
+
 var btnGenerisi = document.getElementById('btnGenerisi')
 var inputInsert = document.getElementById('inputInsert')
 var slideBrzina = document.getElementById('slideBrzina')
@@ -106,10 +109,28 @@ btnObilazak.onclick = function(){
     slideAnim.max = animPut.length - 1
     stablo.obilazak = []
     btnObilazak.disabled = true
+    btnPostorder.disabled = true
     btnInsert.disabled = true
     btnTrazi.disabled = true
     btnUnfreeze.disabled = true
     btnPause.disabled = false
+}
+
+btnPostorder.onclick = function(){
+    op = "POST"
+    stablo.postorder(stablo.korijen, ()=>{}, true)
+    animPut = stablo.obilazak
+    slideAnim.disabled = false
+    slideAnim.value = 0
+    slideAnim.max = animPut.length - 1
+    stablo.obilazak = []
+    btnObilazak.disabled = true
+    btnPostorder.disabled = true
+    btnInsert.disabled = true
+    btnTrazi.disabled = true
+    btnUnfreeze.disabled = true
+    btnPause.disabled = false
+
 }
 
 btnTrazi.onclick = function(){
@@ -124,6 +145,7 @@ btnTrazi.onclick = function(){
     slideAnim.value = 0
     //inputTrazi.value = null
     btnObilazak.disabled = true
+    btnPostorder.disabled = true
     btnInsert.disabled = true
     btnGenerisi.disabled = true
     btnUnfreeze.disabled = true
@@ -184,6 +206,7 @@ btnInsert.onclick = function(){
     
     btnInsert.disabled = true
     btnObilazak.disabled = true
+    btnPostorder.disabled = true
     btnGenerisi.disabled = true
     btnTrazi.disabled = true
     btnUnfreeze.disabled = true
@@ -328,11 +351,12 @@ function crtajPutanjuAnimacija(){
     azurirajKodIndex(cvor)
     
     for (var i = 0; i < animPut.length; i++){
-        if (i < animPut.length - 1)
+        if (i < animPut.length - 1 && animPut[i + 1] && !animPut[i + 1].rezi)
             crtajLiniju(animPut[i], animPut[i + 1], animPut[i].amount)
-        crtajKrug(animPut[i], animPut[i].radius)
+        crtajKrug(animPut[i], animPut[i].radius, animPut[i].visited == false?false:true)
+        
 
-        if (op == "OB" || (op == "TRA" && animPut[putIndex].kljuc == parseInt(inputTrazi.value))){
+        if (op == "OB" || op == "POST" || (op == "TRA" && animPut[putIndex].kljuc == parseInt(inputTrazi.value))){
             c.beginPath()
             c.font = "30pt Calibri"
             c.fillStyle = "red"
@@ -350,6 +374,7 @@ function crtajPutanjuAnimacija(){
             if (!freeze){
                 btnInsert.disabled = false
                 btnObilazak.disabled = false
+                btnPostorder.disabled = false
                 btnTrazi.disabled = false
                 btnUnfreeze.disabled = true
                 inputInsert.disabled = false
@@ -362,11 +387,11 @@ function crtajPutanjuAnimacija(){
                 return
             }
         }
-        /*if (animPut[putIndex + 1].rezi){
-            animPut[putIndex + 1].radius = rad
-            putIndex++
+        if (animPut[putIndex + 1] && animPut[putIndex + 1].rezi){
+            //animPut[putIndex + 1].radius = rad
+            //putIndex++
             
-        }*/
+        }
         if (putIndex < animPut.length - 1 && animPut[putIndex + 1].backtrack){
             putIndex++
             slideAnim.value = putIndex
@@ -383,13 +408,22 @@ function crtajPutanjuAnimacija(){
     }
 }
 
+function dist(start, end){
+    var a = start.x - end.x;
+    var b = start.y - end.y;
+
+    var c = Math.sqrt( a*a + b*b );
+
+    return c
+}
+
 function crtajLiniju(start, end, amount = 1){
 
-    var startX = centarX + start.x * vel
-    var startY = offsetY + start.y * vel
+    var startX = centarX + start.x * vel 
+    var startY = offsetY + start.y * vel 
 
-    var endX = centarX + end.x * vel
-    var endY = offsetY + end.y * vel
+    var endX = centarX + end.x * vel 
+    var endY = offsetY + end.y * vel 
     c.beginPath()
     c.strokeStyle = "red";
     c.moveTo(startX, startY);
@@ -399,17 +433,19 @@ function crtajLiniju(start, end, amount = 1){
     c.closePath()
 }
 
-function crtajKrug(centar, rad){
-    c.beginPath()
-    c.arc(centarX + centar.x*vel, offsetY + centar.y*vel, rad, 0, 360)
-    
+function crtajKrug(centar, radd, fill = true){
+    c.beginPath()  
+    c.arc(centarX + centar.x*vel, offsetY + centar.y*vel, radd, 0, 360)
     c.fillStyle = 'red'
-    c.fill()
+    if (fill)
+        c.fill()
+    else     
+        c.stroke()
     c.fillStyle = "black"
     c.font =  '15pt Calibri';
     c.textAlign = "center"
     c.textBaseline = "middle"
-    if (rad > 0)
+    if (radd > 0)
         c.fillText(centar.kljuc, centarX + centar.x*vel,  offsetY + centar.y*vel)
     c.closePath()
 }
@@ -423,6 +459,8 @@ function crtajKod(){
         kod = obilazakKod
     else if (op == "TRA")
         kod = traziKod
+    else if (op == "POST")
+        kod = postOrderKod
     
     if (kod)
         kod.forEach(l => {

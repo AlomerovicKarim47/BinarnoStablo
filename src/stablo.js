@@ -108,15 +108,22 @@ class Stablo{
     obilazak = []
     postorder(x, operacija, napraviPut = false){
         
-        /*if (napraviPut){
-            if (x.desnoDijete && x.roditelj.lijevo)
-                this.obilazak.push({...x.roditelj, radius:0, amount:0, rezi: true})
-            this.obilazak.push({...x, radius: 0, amount: 0})
-        }*/
-        if (x.lijevo)
+        if (napraviPut){
+            this.obilazak.push({...x, radius: 0, amount: 0, visited: false, rezi: (x.desnoDijete && x.roditelj.lijevo)?true:false})
+        }
+
+        if (x.lijevo){
             this.postorder(x.lijevo, operacija, napraviPut)
-        if (x.desno)
+            if (napraviPut && !x.desno)
+                this.obilazak.push({...x, radius:0, amount:0, rezi:true})
+        }
+        if (x.desno){
             this.postorder(x.desno, operacija, napraviPut)
+            if (napraviPut)
+                this.obilazak.push({...x, radius:0, amount:0, visited: true, rezi:true})
+        }
+        if (!(x.desno || x.lijevo) && napraviPut)
+            this.obilazak.push({...x,radius: 0, amount: 0, visited:true})
         operacija(x)
     }
 
@@ -129,13 +136,15 @@ class Stablo{
         operacija(x)
         if (x.lijevo){
             this.preorder(x.lijevo, operacija, napraviPut)
-            this.obilazak.push({...x, radius: 0, amount: 0, backtrack: true})
+            if (napraviPut)
+                this.obilazak.push({...x, radius: 0, amount: 0, backtrack: true})
         }
         if (x.desno){
             this.preorder(x.desno, operacija, napraviPut)
-            this.obilazak.push({...x,radius: 0, amount: 0, backtrack: true})
+            if (napraviPut)
+                this.obilazak.push({...x,radius: 0, amount: 0, backtrack: true})
         }
-        if (!(x.desno || x.lijevo))
+        if (!(x.desno || x.lijevo) && napraviPut)
             this.obilazak.push({...x,radius: 0, amount: 0, backtrack: true})
     }
 
