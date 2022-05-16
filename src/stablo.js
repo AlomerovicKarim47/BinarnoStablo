@@ -107,6 +107,22 @@ class Stablo{
     }
     obilazak = []
 
+    inorder(x, operacija, napraviPut = false){
+        if (napraviPut){
+
+        }
+        if (x.lijevo){
+            this.inorder(x.lijevo, operacija, napraviPut)
+        }
+        operacija(x)
+        if (x.desno){
+            this.inorder(x.desno, operacija, napraviPut)
+        }
+        if (!(x.desno || x.lijevo)){
+            
+        }
+    }
+
     postorder(x, operacija, napraviPut = false){
         
         if (napraviPut){
