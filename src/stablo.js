@@ -106,6 +106,7 @@ class Stablo{
         return put
     }
     obilazak = []
+
     postorder(x, operacija, napraviPut = false){
         
         if (napraviPut){

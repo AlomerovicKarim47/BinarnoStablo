@@ -293,13 +293,22 @@ function azurirajKodIndex(cvor){
                 kodIndex = 4 //desno
         }
         else if (animDio == "amount0NotEnd"){
-            if (animPut[putIndex].backtrack)
-                kodIndex = 1
+            if (animPut[putIndex].backtrack){
+                if (!animPut[putIndex].lijevo && !animPut[putIndex].desno)
+                    kodIndex = 1
+                else{
+                    /*if (animPut[putIndex].desnoDijete)
+                        kodIndex = 4
+                    else 
+                        kodIndex = 3*/
+                        kodIndex = 2
+                }
+            }
             else
                 kodIndex = 2 //obiđi
         }
         else if (animDio == "amount0IsEnd")
-            kodIndex = 1 //return
+            kodIndex = 4 //return, ipak desno
     }
     else if (op == "TRA"){
         var trazeno = parseInt(inputTrazi.value)
