@@ -318,19 +318,33 @@ function azurirajKodIndex(cvor){
             if (animPut[putIndex].backtrack){
                 if (!animPut[putIndex].lijevo && !animPut[putIndex].desno)
                     kodIndex = 1
-                else{
-                    /*if (animPut[putIndex].desnoDijete)
-                        kodIndex = 4
-                    else 
-                        kodIndex = 3*/
-                        kodIndex = 2
-                }
+                else
+                    kodIndex = 2
             }
             else
                 kodIndex = 2 //obiđi
         }
-        else if (animDio == "amount0IsEnd")
-            kodIndex = 4 //return, ipak desno
+        //else if (animDio == "amount0IsEnd")
+        //    kodIndex = 4 //desno
+    }
+    else if (op == "POST"){
+        if (animDio == "maxRad" && putIndex < animPut.length - 1){
+            if (!animPut[putIndex].visited && !animPut[putIndex].backtrack){
+                if (animPut[putIndex + 1].lijevoDijete)
+                    kodIndex = 2 //lijevo
+                else if (animPut[putIndex + 1].desnoDijete)
+                    kodIndex = 3 //desno
+            }
+        }
+        else if (animDio == "amount0NotEnd"){
+            if (animPut[putIndex].visited)
+                kodIndex = 4 //obidji
+            //else if (!animPut[putIndex].lijevo && !animPut[putIndex].desno)
+            //    kodIndex = 1
+        }
+        //else if (animDio == "amount0IsEnd"){
+
+        //}
     }
     else if (op == "TRA"){
         var trazeno = parseInt(inputTrazi.value)
