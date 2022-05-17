@@ -346,6 +346,14 @@ function azurirajKodIndex(cvor){
 
         //}
     }
+    else if (op == "IN"){
+        if (animDio == "maxRad" && putIndex < animPut.length - 1){
+
+        }
+        else if (animDio == "amount0NotEnd"){
+            
+        }
+    }
     else if (op == "TRA"){
         var trazeno = parseInt(inputTrazi.value)
         if (animDio == "maxRad" ){
