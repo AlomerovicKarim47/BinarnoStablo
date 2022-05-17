@@ -36,3 +36,13 @@ const traziKod =
         trazi DESNO
     ELSE
         trazi LIJEVO`.split("\n")
+
+const minKod = 
+`WHILE x.lijevoDijete NOT NIL
+    x = x.lijevoDijete
+RETURN x`.split("\n")
+
+const maxKod = 
+`WHILE x.desnoDijete NOT NIL
+    x = x.desnoDijete
+RETURN x`.split("\n")

@@ -184,4 +184,30 @@ class Stablo{
         else if (kljuc < x.kljuc)
             return this.trazi(x.lijevo, kljuc, put)
     }
+
+    minimum(){
+        var x = this.korijen
+        var put = []
+        put.push(x)
+        while (x.lijevo){
+            x = x.lijevo
+            if (!x.lijevo)
+                x = {...x, trazeniM: true}
+            put.push(x)
+        }
+        return {cvor: x, put: put.map((p) => {return {...p, radius:0, amount:0}})}
+    }
+
+    maksimum(){
+        var x = this.korijen
+        var put = []
+        put.push(x)
+        while (x.desno){
+            x = x.desno
+            if (!x.desno)
+                x = {...x, trazeniM: true}
+            put.push(x)
+        }
+        return {cvor: x, put: put.map((p) => {return {...p, radius:0, amount:0}})};
+    }
 }

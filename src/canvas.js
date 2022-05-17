@@ -37,6 +37,9 @@ var txtInfo = document.getElementById('infoText')
 var btnPause = document.getElementById('btnPause')
 var slideAnim = document.getElementById('slideAnim')
 
+var btnMin = document.getElementById('btnMin')
+var btnMax = document.getElementById('btnMax')
+
 //Brzine animacije
 var brzina = slideBrzina.value //* 0.5
 var radInc = 0.5 * brzina
@@ -100,6 +103,46 @@ slideAnim.oninput = function(){
     }
 }
 
+btnMin.onclick = function(){
+    op = "MIN"
+    let rez = stablo.minimum()
+    animPut = rez.put
+
+    slideAnim.disabled = false
+    slideAnim.value = 0
+    slideAnim.max = animPut.length - 1
+    stablo.obilazak = []
+    btnObilazak.disabled = true
+    btnPostorder.disabled = true
+    btnInorder.disabled = true
+    btnInsert.disabled = true
+    btnTrazi.disabled = true
+    btnUnfreeze.disabled = true
+    btnPause.disabled = false
+    btnMin.disabled = true
+    btnMax.disabled = true
+}
+
+btnMax.onclick = function(){
+    op = "MAX"
+    let rez = stablo.maksimum()
+    animPut = rez.put
+
+    slideAnim.disabled = false
+    slideAnim.value = 0
+    slideAnim.max = animPut.length - 1
+    stablo.obilazak = []
+    btnObilazak.disabled = true
+    btnPostorder.disabled = true
+    btnInorder.disabled = true
+    btnInsert.disabled = true
+    btnTrazi.disabled = true
+    btnUnfreeze.disabled = true
+    btnPause.disabled = false
+    btnMin.disabled = true
+    btnMax.disabled = true
+}
+
 btnInorder.onclick = function(){
     ispis = []
     op = "IN"
@@ -117,6 +160,8 @@ btnInorder.onclick = function(){
     btnTrazi.disabled = true
     btnUnfreeze.disabled = true
     btnPause.disabled = false
+    btnMin.disabled = true
+    btnMax.disabled = true
 }
 
 btnObilazak.onclick = function(){
@@ -135,6 +180,8 @@ btnObilazak.onclick = function(){
     btnTrazi.disabled = true
     btnUnfreeze.disabled = true
     btnPause.disabled = false
+    btnMin.disabled = true
+    btnMax.disabled = true
 }
 
 btnPostorder.onclick = function(){
@@ -153,6 +200,8 @@ btnPostorder.onclick = function(){
     btnTrazi.disabled = true
     btnUnfreeze.disabled = true
     btnPause.disabled = false
+    btnMin.disabled = true
+    btnMax.disabled = true
 
 }
 
@@ -177,6 +226,8 @@ btnTrazi.onclick = function(){
     inputInsert.disabled = true
     inputTrazi.disabled = true
     btnPause.disabled = false
+    btnMin.disabled = true
+    btnMax.disabled = true
 }
 
 btnGenerisi.onclick = function(){
@@ -238,6 +289,8 @@ btnInsert.onclick = function(){
     inputInsert.disabled = true
     inputTrazi.disabled = true
     btnPause.disabled = false
+    btnMin.disabled = true
+    btnMax.disabled = true
 }
 
 var crtajCvor = function(cvor){
@@ -392,6 +445,28 @@ function azurirajKodIndex(cvor){
                 kodIndex = 0
         }
     }
+    else if (op == "MIN"){
+        if (animDio == "maxRad" && putIndex < animPut.length - 1){
+            kodIndex = 1
+        }
+        else if (animDio == "amount0NotEnd"){
+            kodIndex = 0
+        }
+        else if (animDio == "amount0IsEnd"){
+            kodIndex = 2
+        }
+    }
+    else if (op == "MAX"){
+        if (animDio == "maxRad" && putIndex < animPut.length - 1){
+            kodIndex = 1
+        }
+        else if (animDio == "amount0NotEnd"){
+            kodIndex = 0
+        }
+        else if (animDio == "amount0IsEnd"){
+            kodIndex = 2
+        }
+    }
 }
 var ispis = []
 function crtajPutanjuAnimacija(){
@@ -417,7 +492,8 @@ function crtajPutanjuAnimacija(){
         crtajKrug(animPut[i], animPut[i].radius, animPut[i].visited == false?false:true)
         
 
-        if (op == "OB" || op == "POST" || op == "IN" || (op == "TRA" && animPut[putIndex].kljuc == parseInt(inputTrazi.value))){
+        if (op == "OB" || op == "POST" || op == "IN" || (op == "TRA" && animPut[putIndex].kljuc == parseInt(inputTrazi.value)) 
+            || animPut[putIndex].trazeniM){
             c.beginPath()
             c.font = "30pt Calibri"
             c.fillStyle = "red"
@@ -447,6 +523,8 @@ function crtajPutanjuAnimacija(){
                 inputInsert.disabled = false
                 inputTrazi.disabled = false
                 btnPause.disabled = true
+                btnMin.disabled = false
+                btnMax.disabled = false
                 txtInfo.innerHTML = "Nema animacije"
                 putIndex = 0
                 animPut = null
@@ -530,6 +608,10 @@ function crtajKod(){
         kod = postOrderKod
     else if (op == "IN")
         kod = inOrderKod
+    else if (op == "MIN")
+        kod = minKod
+    else if (op == "MAX")
+        kod = maxKod
     
     if (kod)
         kod.forEach(l => {
