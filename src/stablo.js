@@ -130,7 +130,6 @@ class Stablo{
     }
 
     postorder(x, operacija, napraviPut = false){
-        
         if (napraviPut){
             this.obilazak.push({...x, radius: 0, amount: 0, visited: false, rezi: (x.desnoDijete && x.roditelj.lijevo)?true:false})
         }

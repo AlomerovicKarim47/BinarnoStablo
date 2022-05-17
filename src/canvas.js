@@ -329,7 +329,7 @@ function azurirajKodIndex(cvor){
     }
     else if (op == "POST"){
         if (animDio == "maxRad" && putIndex < animPut.length - 1){
-            if (!animPut[putIndex].visited && !animPut[putIndex].backtrack){
+            if (!animPut[putIndex + 1].visited && animPut[putIndex].y < animPut[putIndex + 1].y){
                 if (animPut[putIndex + 1].lijevoDijete)
                     kodIndex = 2 //lijevo
                 else if (animPut[putIndex + 1].desnoDijete)
@@ -339,19 +339,24 @@ function azurirajKodIndex(cvor){
         else if (animDio == "amount0NotEnd"){
             if (animPut[putIndex].visited)
                 kodIndex = 4 //obidji
-            //else if (!animPut[putIndex].lijevo && !animPut[putIndex].desno)
-            //    kodIndex = 1
+            else if (!animPut[putIndex].lijevo && !animPut[putIndex].desno)
+                kodIndex = 1
         }
-        //else if (animDio == "amount0IsEnd"){
-
-        //}
     }
     else if (op == "IN"){
         if (animDio == "maxRad" && putIndex < animPut.length - 1){
-
+            
+                if (animPut[putIndex + 1].lijevoDijete)
+                    kodIndex = 2 //lijevo
+                else if (animPut[putIndex + 1].desnoDijete)
+                    kodIndex = 4 //desno
+            
         }
         else if (animDio == "amount0NotEnd"){
-            
+            if (animPut[putIndex].visited)
+                kodIndex = 3 //obidji
+            else if (!animPut[putIndex].lijevo && !animPut[putIndex].desno)
+                kodIndex = 1
         }
     }
     else if (op == "TRA"){
@@ -385,7 +390,7 @@ function azurirajKodIndex(cvor){
         }
     }
 }
-
+var ispis = []
 function crtajPutanjuAnimacija(){
     var cvor = animPut[putIndex]
     if (cvor.radius == rad){
@@ -515,6 +520,8 @@ function crtajKod(){
         kod = traziKod
     else if (op == "POST")
         kod = postOrderKod
+    else if (op == "IN")
+        kod = inOrderKod
     
     if (kod)
         kod.forEach(l => {
@@ -537,6 +544,23 @@ function crtajKod(){
         });
 }
 
+function crtajIspis(){
+    for (var i = 0; i < ispis.length; i++){
+        c.beginPath()
+        var ofsx = 800
+        var ofsy = 400
+        c.rect(ofsx + ispis[i].pos*50, ofsy, 50, 50)
+        c.fillStyle = "white"
+        c.fill()
+        c.fillStyle = "black"
+        c.font = "15pt calibri"
+        c.textAlign = "left"
+        c.textBaseline = "top"
+        c.fillText(ispis[i].kljuc, ofsx + ispis[i].pos*50, ofsy + 15)
+        c.closePath()
+    }
+}
+
 function crtaj(){
     if (stablo.korijen){
         c.clearRect(0,0, canvas.width, canvas.height)
@@ -545,6 +569,7 @@ function crtaj(){
             txtInfo.innerHTML = "Animacija u toku"       
             crtajKod()
             crtajPutanjuAnimacija()
+            crtajIspis()
         }
         if (stablo.pomjeri && !animPut){ //Pomjeri samo ako je animacija puta gotova
             stablo.postorder(stablo.korijen, pomjeriCvorAnimacija)

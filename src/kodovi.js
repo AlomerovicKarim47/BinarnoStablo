@@ -7,21 +7,21 @@ const insertKod =
 napravi novi cvor`.split("\n")
 
 const obilazakKod = 
-    `IF cvor IS NIL
+    `IF djeca ARE NIL
         RETURN
     OBIĐI cvor
     preOrder(LIJEVO podstablo)
     preOrder(DESNO podstablo)`.split("\n")
 
 const postOrderKod = 
-    `IF cvor IS NIL
+    `IF djeca ARE NIL
         RETURN
     postOrder(LIJEVO podstablo)
     postOrder(DESNO podstablo)
     OBIĐI cvor`.split("\n")
     
 const inOrderKod = 
-`IF cvor IS NIL
+`IF djeca ARE NIL
     RETURN
 inorder(LIJEVO podstablo)
 OBIĐI cvor
