@@ -101,6 +101,7 @@ slideAnim.oninput = function(){
 }
 
 btnInorder.onclick = function(){
+    ispis = []
     op = "IN"
     stablo.inorder(stablo.korijen, () => {}, true)
     animPut = stablo.obilazak
@@ -119,6 +120,7 @@ btnInorder.onclick = function(){
 }
 
 btnObilazak.onclick = function(){
+    ispis = []
     op = "OB"
     stablo.preorder(stablo.korijen, (x) => {}, true)
     animPut = stablo.obilazak
@@ -136,6 +138,7 @@ btnObilazak.onclick = function(){
 }
 
 btnPostorder.onclick = function(){
+    ispis = []
     op = "POST"
     stablo.postorder(stablo.korijen, ()=>{}, true)
     animPut = stablo.obilazak
@@ -425,6 +428,11 @@ function crtajPutanjuAnimacija(){
 
     if (cvor.radius >= rad)
     {
+
+        if ((cvor.visited || op == "OB") && !ispis.find((x) => x.kljuc == cvor.kljuc)){
+            ispis.push({...cvor, pos: ispis.length})
+        }
+
         cvor.radius = rad
         if (putIndex >= animPut.length-1){
             btnUnfreeze.disabled = false
@@ -547,7 +555,7 @@ function crtajKod(){
 function crtajIspis(){
     for (var i = 0; i < ispis.length; i++){
         c.beginPath()
-        var ofsx = 800
+        var ofsx = 1200
         var ofsy = 400
         c.rect(ofsx + ispis[i].pos*50, ofsy, 50, 50)
         c.fillStyle = "white"
@@ -556,7 +564,7 @@ function crtajIspis(){
         c.font = "15pt calibri"
         c.textAlign = "left"
         c.textBaseline = "top"
-        c.fillText(ispis[i].kljuc, ofsx + ispis[i].pos*50, ofsy + 15)
+        c.fillText(ispis[i].kljuc, ofsx + ispis[i].pos*50 + 10, ofsy + 15)
         c.closePath()
     }
 }

@@ -137,7 +137,7 @@ class Stablo{
         if (x.lijevo){
             this.postorder(x.lijevo, operacija, napraviPut)
             if (napraviPut && !x.desno)
-                this.obilazak.push({...x, radius:0, amount:0, rezi:true})
+                this.obilazak.push({...x, radius:0, amount:0, rezi:true, visited:true})
         }
         if (x.desno){
             this.postorder(x.desno, operacija, napraviPut)
