@@ -121,6 +121,7 @@ btnMin.onclick = function(){
     btnPause.disabled = false
     btnMin.disabled = true
     btnMax.disabled = true
+    btnGenerisi.disabled = true
 }
 
 btnMax.onclick = function(){
@@ -141,6 +142,7 @@ btnMax.onclick = function(){
     btnPause.disabled = false
     btnMin.disabled = true
     btnMax.disabled = true
+    btnGenerisi.disabled = true
 }
 
 btnInorder.onclick = function(){
@@ -162,6 +164,7 @@ btnInorder.onclick = function(){
     btnPause.disabled = false
     btnMin.disabled = true
     btnMax.disabled = true
+    btnGenerisi.disabled = true
 }
 
 btnObilazak.onclick = function(){
@@ -182,6 +185,7 @@ btnObilazak.onclick = function(){
     btnPause.disabled = false
     btnMin.disabled = true
     btnMax.disabled = true
+    btnGenerisi.disabled = true
 }
 
 btnPostorder.onclick = function(){
@@ -202,6 +206,7 @@ btnPostorder.onclick = function(){
     btnPause.disabled = false
     btnMin.disabled = true
     btnMax.disabled = true
+    btnGenerisi.disabled = true
 
 }
 
@@ -231,7 +236,7 @@ btnTrazi.onclick = function(){
 }
 
 btnGenerisi.onclick = function(){
-    
+    stablo = new Stablo()
     stablo.insert(getRndInteger(40,60))
     for (var i = 0; i < 9; i++){
         var x = getRndInteger(0,100)
@@ -252,7 +257,7 @@ btnGenerisi.onclick = function(){
     }
     stablo.novi = null
     
-    btnGenerisi.disabled = true
+    //btnGenerisi.disabled = true
 }
 
 btnUnfreeze.onclick = function(){
@@ -304,8 +309,8 @@ var crtajCvor = function(cvor){
     if (cvor.roditelj){
         c.beginPath()
         c.moveTo(x, y)
-        c.lineWidth = 1
-        c.strokeStyle = "black"
+        c.lineWidth = 5
+        c.strokeStyle = "green"
         c.lineTo(centarX + cvor.roditelj.x*vel, offsetY + cvor.roditelj.y*vel)
         c.stroke()
         c.closePath()
@@ -316,8 +321,8 @@ var crtajCvor = function(cvor){
     c.fillStyle = 'green'
     c.fill()
     //c.stroke()
-    c.fillStyle = "black"
-    c.font =  '15pt Calibri';
+    c.fillStyle = "white"
+    c.font =  'bold 15pt Calibri';
     c.textAlign = "center"
     c.textBaseline = "middle"
     c.fillText(cvor.kljuc /*+ " ("+cvor.x + ", " + cvor.y+") " + cvor.novaPoz*/, centarX + cvor.x*vel,  offsetY + cvor.y*vel)
@@ -515,6 +520,7 @@ function crtajPutanjuAnimacija(){
             btnUnfreeze.disabled = false
             txtInfo.innerHTML = "Animacija gotova"
             if (!freeze){
+                btnGenerisi.disabled = false
                 btnInsert.disabled = false
                 btnObilazak.disabled = false
                 btnPostorder.disabled = false
@@ -598,9 +604,10 @@ function crtajKrug(centar, radd, fill = true){
         }
     }
     c.fillStyle = "black"
-    c.font =  '15pt Calibri';
+    c.font =  'bold 15pt Calibri';
     c.textAlign = "center"
     c.textBaseline = "middle"
+    c.fillStyle = "white"
     if (radd > 0)
         c.fillText(centar.kljuc, centarX + centar.x*vel,  offsetY + centar.y*vel)
     c.closePath()
@@ -628,17 +635,18 @@ function crtajKod(){
         kod.forEach(l => {
             c.beginPath()
             if (kodIndex == i)
-                c.fillStyle = "black"
+                c.fillStyle = "red"
             else
-                c.fillStyle = "white"
+                c.fillStyle = "green"
             c.fillRect(centarX + 700, offsetY + i*32, 300, 32)
             c.stroke()
             if (kodIndex == i)
-                c.fillStyle = "white"
+                c.fillStyle = "red"
             else
-                c.fillStyle = "black"
+                c.fillStyle = "green"
             c.textAlign = "left"
             c.textBaseline = "top"
+            c.fillStyle = "white"
             c.fillText(l, centarX + 700, offsetY + i*32)
             c.closePath()
             i++
@@ -651,13 +659,13 @@ function crtajIspis(){
         var ofsx = 1200
         var ofsy = 400
         c.rect(ofsx + ispis[i].pos*50, ofsy, 50, 50)
-        c.fillStyle = "white"
+        c.fillStyle = "green"
         c.fill()
-        c.fillStyle = "black"
-        c.font = "15pt calibri"
+        c.fillStyle = "white"
+        c.font = "bold 15pt calibri"
         c.textAlign = "left"
         c.textBaseline = "top"
-        c.fillText(ispis[i].kljuc, ofsx + ispis[i].pos*50 + 10, ofsy + 15)
+        c.fillText(ispis[i].kljuc, ofsx + ispis[i].pos*50 + 15, ofsy + 15)  
         c.closePath()
     }
 }

@@ -7,34 +7,49 @@
     <title>Document</title>
     <style type = "text/css">
         canvas{
-            background: grey;
+            background: rgb(255, 255, 255);
         }
         body{
             margin:0px
         }
+        input[type = "button"]{
+            background: green;
+        }
     </style>
 </head>
 <body>
-    <button id = "btnGenerisi">Generisi stablo</button>
-    <input type="text" id = "inputInsert">
-    <button id = "btnInsert">Insert</button>
-    <input type="text" id = "inputTrazi">
-    <button id = "btnTrazi">Trazi</button>
-    <button id = "btnMin">Minimum</button>
-    <button id = "btnMax">Maksimum</button>
-    <button id = "btnObilazak">Preorder</button>
-    <button id = "btnPostorder">Postorder</button>
-    <button id = "btnInorder">Inorder</button>
-    <br/>
-    Brzina: <div id = "textBrzina" style = "display: inline-block; width: 30px;"></div>
-    <input type = "range" min = "0.25" max = "3" step="0.25" value = "1" class = "slider" id = "slideBrzina" style = "width: 250px;">
-    <div style = "width: 200px; display: inline-block;" id = "infoText">Nema animacije</div>
-    <button id = "btnUnfreeze" disabled>Zavrsi</button>
-    <button id = "btnPause" disabled>Pauziraj</button>
-    <input type = "range" min = "0" step="1" value = "0" class = "slider" id = "slideAnim" style = "width: 500px;" disabled>
+    <div>
+        <div style="float: left;height: 50px; padding: 5px;">
+            <button id = "btnGenerisi" style="height: 100%;">Generisi stablo</button>
+        </div>
+        <div style="display: inline-block; padding: 5px; padding-left: 0px;">
+            <div>
+                <input type="text" id = "inputInsert">
+                <button id = "btnInsert">Insert</button>
+                <input type="text" id = "inputTrazi">
+                <button id = "btnTrazi">Trazi</button>
+                <button id = "btnMin">Minimum</button>
+                <button id = "btnMax">Maksimum</button>
+                <button id = "btnObilazak">Preorder</button>
+                <button id = "btnPostorder">Postorder</button>
+                <button id = "btnInorder">Inorder</button>
+            </div>
+            <div>
+                Brzina: <div id = "textBrzina" style = "display: inline-block; width: 30px;"></div>
+                <input type = "range" min = "0.25" max = "3" step="0.25" value = "1" class = "slider" id = "slideBrzina" style = "width: 250px;">
+                
+                <button id = "btnUnfreeze" disabled>Zavrsi</button>
+                <button id = "btnPause" disabled>Pauziraj</button>
+                <input type = "range" min = "0" step="1" value = "0" class = "slider" id = "slideAnim" style = "width: 500px;" disabled>
+                <div style = "width: 200px; display: inline-block;" id = "infoText">Nema animacije</div>
+            </div>
+        </div>
+    </div>
+
     <canvas>
         
     </canvas>
+    
     <script src = "stablo.js"></script>
     <script src = "crtajPut.js"></script>
     <script src = "kodovi.js"></script>
