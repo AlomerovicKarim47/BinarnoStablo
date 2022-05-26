@@ -232,6 +232,7 @@ btnTrazi.onclick = function(){
 
 btnGenerisi.onclick = function(){
     
+    stablo.insert(getRndInteger(40,60))
     for (var i = 0; i < 9; i++){
         var x = getRndInteger(0,100)
         if (stablo.lista.filter((n) => n.kljuc == x).length > 0)
@@ -579,13 +580,23 @@ function crtajLiniju(start, end, amount = 1){
 }
 
 function crtajKrug(centar, radd, fill = true){
-    c.beginPath()  
+    c.beginPath()
+    if (!fill && radd > rad - 5)
+        radd = rad - 5  
     c.arc(centarX + centar.x*vel, offsetY + centar.y*vel, radd, 0, 360)
     c.fillStyle = 'red'
     if (fill)
         c.fill()
-    else     
+    else{ 
         c.stroke()
+        if (radd > 5){
+            c.beginPath()
+            c.arc(centarX + centar.x*vel, offsetY + centar.y*vel, radd - 5, 0, 360)
+            c.fillStyle = "green"
+            c.fill()
+            c.closePath()
+        }
+    }
     c.fillStyle = "black"
     c.font =  '15pt Calibri';
     c.textAlign = "center"
