@@ -103,16 +103,22 @@ slideAnim.oninput = function(){
     }
 }
 
+function setButtonsDisable(dis){
+    btnObilazak.disabled = dis
+}
+
 btnMin.onclick = function(){
     op = "MIN"
     let rez = stablo.minimum()
     animPut = rez.put
 
+    setButtonsDisable(true)
+
     slideAnim.disabled = false
     slideAnim.value = 0
     slideAnim.max = animPut.length - 1
     stablo.obilazak = []
-    btnObilazak.disabled = true
+
     btnPostorder.disabled = true
     btnInorder.disabled = true
     btnInsert.disabled = true
@@ -129,11 +135,13 @@ btnMax.onclick = function(){
     let rez = stablo.maksimum()
     animPut = rez.put
 
+    setButtonsDisable(true)
+
     slideAnim.disabled = false
     slideAnim.value = 0
     slideAnim.max = animPut.length - 1
     stablo.obilazak = []
-    btnObilazak.disabled = true
+
     btnPostorder.disabled = true
     btnInorder.disabled = true
     btnInsert.disabled = true
@@ -151,11 +159,13 @@ btnInorder.onclick = function(){
     stablo.inorder(stablo.korijen, () => {}, true)
     animPut = stablo.obilazak
 
+    setButtonsDisable(true)
+
     slideAnim.disabled = false
     slideAnim.value = 0
     slideAnim.max = animPut.length - 1
     stablo.obilazak = []
-    btnObilazak.disabled = true
+    
     btnPostorder.disabled = true
     btnInorder.disabled = true
     btnInsert.disabled = true
@@ -172,11 +182,13 @@ btnObilazak.onclick = function(){
     op = "OB"
     stablo.preorder(stablo.korijen, (x) => {}, true)
     animPut = stablo.obilazak
+
+    setButtonsDisable(true)
+
     slideAnim.disabled = false
     slideAnim.value = 0
     slideAnim.max = animPut.length - 1
     stablo.obilazak = []
-    btnObilazak.disabled = true
     btnPostorder.disabled = true
     btnInorder.disabled = true
     btnInsert.disabled = true
@@ -193,11 +205,13 @@ btnPostorder.onclick = function(){
     op = "POST"
     stablo.postorder(stablo.korijen, ()=>{}, true)
     animPut = stablo.obilazak
+
+    setButtonsDisable(true)
+
     slideAnim.disabled = false
     slideAnim.value = 0
     slideAnim.max = animPut.length - 1
     stablo.obilazak = []
-    btnObilazak.disabled = true
     btnPostorder.disabled = true
     btnInorder.disabled = true
     btnInsert.disabled = true
@@ -217,11 +231,13 @@ btnTrazi.onclick = function(){
     var x = parseInt(inputTrazi.value)
     var rez = stablo.trazi(stablo.korijen, x)
     animPut = rez.put
+
+    setButtonsDisable(true)
+
     slideAnim.max = animPut.length - 1
     slideAnim.disabled = false
     slideAnim.value = 0
     //inputTrazi.value = null
-    btnObilazak.disabled = true
     btnPostorder.disabled = true
     btnInorder.disabled = true
     btnInsert.disabled = true
@@ -280,13 +296,15 @@ btnInsert.onclick = function(){
     if (stablo.lista.filter((n) => n.kljuc == x).length > 0)
         return
     animPut = stablo.insert(x)
+
+    setButtonsDisable(true)
+
     slideAnim.disabled = false
     slideAnim.max = animPut.length - 1
     slideAnim.value = 0
     //inputInsert.value = null
     
     btnInsert.disabled = true
-    btnObilazak.disabled = true
     btnPostorder.disabled = true
     btnInorder.disabled = true
     btnGenerisi.disabled = true
@@ -520,9 +538,9 @@ function crtajPutanjuAnimacija(){
             btnUnfreeze.disabled = false
             txtInfo.innerHTML = "Animacija gotova"
             if (!freeze){
+                setButtonsDisable(false)
                 btnGenerisi.disabled = false
                 btnInsert.disabled = false
-                btnObilazak.disabled = false
                 btnPostorder.disabled = false
                 btnInorder.disabled = false
                 btnTrazi.disabled = false
