@@ -1,31 +1,15 @@
 var canvas = document.querySelector('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-var centarX = window.innerWidth/3
-var offsetY = 50
-var vel = 70 //duzina i sirina celije grida
-var rad = 30 //radius cvorova
-
-//Za kontrolu animacije putanje
-var animPut = null
-var putIndex = 0
-
-//Za highlightovanje linije koda
-var kod = null
-var kodIndex = 0
-
 var c = canvas.getContext('2d');
-var stablo = new Stablo()
 
-var freeze = false
-var animGotova = true
+var stablo = new Stablo()
 
 //Html elementi
 var btnInsert = document.getElementById('btnInsert')
 var btnObilazak = document.getElementById('btnObilazak')
 var btnPostorder = document.getElementById('btnPostorder')
 var btnInorder = document.getElementById('btnInorder')
-
 var btnGenerisi = document.getElementById('btnGenerisi')
 var inputInsert = document.getElementById('inputInsert')
 var slideBrzina = document.getElementById('slideBrzina')
@@ -36,19 +20,47 @@ var btnUnfreeze = document.getElementById('btnUnfreeze')
 var txtInfo = document.getElementById('infoText')
 var btnPause = document.getElementById('btnPause')
 var slideAnim = document.getElementById('slideAnim')
-
 var btnMin = document.getElementById('btnMin')
 var btnMax = document.getElementById('btnMax')
 
+//Pozicije
+var centarX = window.innerWidth/3
+var offsetY = 50
+var vel = 70 //duzina i sirina celije grida
+var rad = 30 //radius cvorova
+
+//Za kontrolu animacije putanje
+var animPut = null
+var putIndex = 0
+var freeze = false
 //Brzine animacije
 var brzina = slideBrzina.value //* 0.5
 var radInc = 0.5 * brzina
 var amountInc = 0.01 * brzina 
 var pomInc = 0.1 * brzina
-
 var amountInc2 = amountInc
 var radInc2 = radInc
 var pomInc2 = pomInc
+
+//Za highlightovanje linije koda
+var kod = null
+var kodIndex = 0
+//Ispis koda
+var op = "X"
+var animDio = null
+
+//Boje
+var boja1 = "green"
+var boja2 = "red"
+var boja3 = "white"
+
+//Ispis stabla
+var ispis = []
+
+//POmocne fje
+function getRndInteger(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) ) + min;
+}
 
 //Slider za brzinu
 textBrzina.innerHTML = brzina
@@ -68,10 +80,6 @@ slideBrzina.oninput = function(){
         amountInc2 = 0.01 * brzina 
         pomInc2 = 0.1 * brzina
     }
-}
-
-function getRndInteger(min, max) {
-    return Math.floor(Math.random() * (max - min + 1) ) + min;
 }
 
 btnPause.onclick = function(){
@@ -103,54 +111,38 @@ slideAnim.oninput = function(){
     }
 }
 
-function setButtonsDisable(dis){
+function setButtonsDisable(dis, skipSlide = false){
     btnObilazak.disabled = dis
+    btnPostorder.disabled = dis
+    btnInorder.disabled = dis
+    btnInsert.disabled = dis
+    btnTrazi.disabled = dis
+    btnUnfreeze.disabled = dis
+    btnPause.disabled = !dis
+    btnMin.disabled = dis
+    btnMax.disabled = dis
+    btnGenerisi.disabled = dis
+    if (!skipSlide){
+        slideAnim.disabled = !dis
+        slideAnim.value = 0
+        slideAnim.max = animPut.length - 1
+    }
 }
 
 btnMin.onclick = function(){
     op = "MIN"
     let rez = stablo.minimum()
     animPut = rez.put
-
     setButtonsDisable(true)
-
-    slideAnim.disabled = false
-    slideAnim.value = 0
-    slideAnim.max = animPut.length - 1
     stablo.obilazak = []
-
-    btnPostorder.disabled = true
-    btnInorder.disabled = true
-    btnInsert.disabled = true
-    btnTrazi.disabled = true
-    btnUnfreeze.disabled = true
-    btnPause.disabled = false
-    btnMin.disabled = true
-    btnMax.disabled = true
-    btnGenerisi.disabled = true
 }
 
 btnMax.onclick = function(){
     op = "MAX"
     let rez = stablo.maksimum()
     animPut = rez.put
-
     setButtonsDisable(true)
-
-    slideAnim.disabled = false
-    slideAnim.value = 0
-    slideAnim.max = animPut.length - 1
     stablo.obilazak = []
-
-    btnPostorder.disabled = true
-    btnInorder.disabled = true
-    btnInsert.disabled = true
-    btnTrazi.disabled = true
-    btnUnfreeze.disabled = true
-    btnPause.disabled = false
-    btnMin.disabled = true
-    btnMax.disabled = true
-    btnGenerisi.disabled = true
 }
 
 btnInorder.onclick = function(){
@@ -158,23 +150,8 @@ btnInorder.onclick = function(){
     op = "IN"
     stablo.inorder(stablo.korijen, () => {}, true)
     animPut = stablo.obilazak
-
     setButtonsDisable(true)
-
-    slideAnim.disabled = false
-    slideAnim.value = 0
-    slideAnim.max = animPut.length - 1
     stablo.obilazak = []
-    
-    btnPostorder.disabled = true
-    btnInorder.disabled = true
-    btnInsert.disabled = true
-    btnTrazi.disabled = true
-    btnUnfreeze.disabled = true
-    btnPause.disabled = false
-    btnMin.disabled = true
-    btnMax.disabled = true
-    btnGenerisi.disabled = true
 }
 
 btnObilazak.onclick = function(){
@@ -182,22 +159,8 @@ btnObilazak.onclick = function(){
     op = "OB"
     stablo.preorder(stablo.korijen, (x) => {}, true)
     animPut = stablo.obilazak
-
     setButtonsDisable(true)
-
-    slideAnim.disabled = false
-    slideAnim.value = 0
-    slideAnim.max = animPut.length - 1
     stablo.obilazak = []
-    btnPostorder.disabled = true
-    btnInorder.disabled = true
-    btnInsert.disabled = true
-    btnTrazi.disabled = true
-    btnUnfreeze.disabled = true
-    btnPause.disabled = false
-    btnMin.disabled = true
-    btnMax.disabled = true
-    btnGenerisi.disabled = true
 }
 
 btnPostorder.onclick = function(){
@@ -205,23 +168,8 @@ btnPostorder.onclick = function(){
     op = "POST"
     stablo.postorder(stablo.korijen, ()=>{}, true)
     animPut = stablo.obilazak
-
     setButtonsDisable(true)
-
-    slideAnim.disabled = false
-    slideAnim.value = 0
-    slideAnim.max = animPut.length - 1
     stablo.obilazak = []
-    btnPostorder.disabled = true
-    btnInorder.disabled = true
-    btnInsert.disabled = true
-    btnTrazi.disabled = true
-    btnUnfreeze.disabled = true
-    btnPause.disabled = false
-    btnMin.disabled = true
-    btnMax.disabled = true
-    btnGenerisi.disabled = true
-
 }
 
 btnTrazi.onclick = function(){
@@ -231,24 +179,7 @@ btnTrazi.onclick = function(){
     var x = parseInt(inputTrazi.value)
     var rez = stablo.trazi(stablo.korijen, x)
     animPut = rez.put
-
     setButtonsDisable(true)
-
-    slideAnim.max = animPut.length - 1
-    slideAnim.disabled = false
-    slideAnim.value = 0
-    //inputTrazi.value = null
-    btnPostorder.disabled = true
-    btnInorder.disabled = true
-    btnInsert.disabled = true
-    btnGenerisi.disabled = true
-    btnUnfreeze.disabled = true
-    btnTrazi.disabled = true
-    inputInsert.disabled = true
-    inputTrazi.disabled = true
-    btnPause.disabled = false
-    btnMin.disabled = true
-    btnMax.disabled = true
 }
 
 btnGenerisi.onclick = function(){
@@ -262,18 +193,16 @@ btnGenerisi.onclick = function(){
         //izbjegni animaciju
         if (stablo.pomjeri && !animPut){
             while (stablo.pomjeri){
-            stablo.postorder(stablo.korijen, pomjeriCvorAnimacija)
-            stablo.progres += 0.1
-            if (stablo.progres >= 1){
-                stablo.progres = 0
-                stablo.pomjeri = false
-            }
+                stablo.postorder(stablo.korijen, pomjeriCvorAnimacija)
+                stablo.progres += 0.1
+                if (stablo.progres >= 1){
+                    stablo.progres = 0
+                    stablo.pomjeri = false
+                }
             }
         }
     }
     stablo.novi = null
-    
-    //btnGenerisi.disabled = true
 }
 
 btnUnfreeze.onclick = function(){
@@ -282,43 +211,18 @@ btnUnfreeze.onclick = function(){
     inputInsert.value = null
     slideAnim.disabled = true
     slideAnim.value = 0
-    //animPut = null
-    /*for (var i = 0; i < animPut.length; i++){
-        animPut[i].amount = 0
-        animPut[i].rad = 0
-    }*/
 }
 
 btnInsert.onclick = function(){
-
     op = "INS"
     var x = parseInt(inputInsert.value)
     if (stablo.lista.filter((n) => n.kljuc == x).length > 0)
         return
     animPut = stablo.insert(x)
-
     setButtonsDisable(true)
-
-    slideAnim.disabled = false
-    slideAnim.max = animPut.length - 1
-    slideAnim.value = 0
-    //inputInsert.value = null
-    
-    btnInsert.disabled = true
-    btnPostorder.disabled = true
-    btnInorder.disabled = true
-    btnGenerisi.disabled = true
-    btnTrazi.disabled = true
-    btnUnfreeze.disabled = true
-    inputInsert.disabled = true
-    inputTrazi.disabled = true
-    btnPause.disabled = false
-    btnMin.disabled = true
-    btnMax.disabled = true
 }
 
 var crtajCvor = function(cvor){
-
     if (stablo.novi && cvor.kljuc == stablo.novi.kljuc)
         return
     var x = centarX + cvor.x * vel
@@ -328,7 +232,7 @@ var crtajCvor = function(cvor){
         c.beginPath()
         c.moveTo(x, y)
         c.lineWidth = 5
-        c.strokeStyle = "green"
+        c.strokeStyle = boja1
         c.lineTo(centarX + cvor.roditelj.x*vel, offsetY + cvor.roditelj.y*vel)
         c.stroke()
         c.closePath()
@@ -336,14 +240,13 @@ var crtajCvor = function(cvor){
 
     c.beginPath()
     c.arc(x, y, rad, 0, 360)
-    c.fillStyle = 'green'
+    c.fillStyle = boja1
     c.fill()
-    //c.stroke()
-    c.fillStyle = "white"
+    c.fillStyle = boja3
     c.font =  'bold 15pt Calibri';
     c.textAlign = "center"
     c.textBaseline = "middle"
-    c.fillText(cvor.kljuc /*+ " ("+cvor.x + ", " + cvor.y+") " + cvor.novaPoz*/, centarX + cvor.x*vel,  offsetY + cvor.y*vel)
+    c.fillText(cvor.kljuc, centarX + cvor.x*vel,  offsetY + cvor.y*vel)
     c.closePath()
 }
 
@@ -363,9 +266,6 @@ var pomjeriCvorAnimacija = function(cvor){
         cvor.novaPoz = null
     }
 }
-
-var op = "X"
-var animDio = null
 
 function azurirajKodIndex(cvor){
     if (op == "INS"){
@@ -404,8 +304,6 @@ function azurirajKodIndex(cvor){
             else
                 kodIndex = 2 //obiđi
         }
-        //else if (animDio == "amount0IsEnd")
-        //    kodIndex = 4 //desno
     }
     else if (op == "POST"){
         if (animDio == "maxRad" && putIndex < animPut.length - 1){
@@ -492,7 +390,7 @@ function azurirajKodIndex(cvor){
         }
     }
 }
-var ispis = []
+
 function crtajPutanjuAnimacija(){
     var cvor = animPut[putIndex]
     if (cvor.radius == rad){
@@ -515,20 +413,17 @@ function crtajPutanjuAnimacija(){
             crtajLiniju(animPut[i], animPut[i + 1], animPut[i].amount)
         crtajKrug(animPut[i], animPut[i].radius, animPut[i].visited == false?false:true)
         
-
         if (op == "OB" || op == "POST" || op == "IN" || (op == "TRA" && animPut[putIndex].kljuc == parseInt(inputTrazi.value)) 
             || animPut[putIndex].trazeniM){
             c.beginPath()
             c.font = "30pt Calibri"
-            c.fillStyle = "red"
+            c.fillStyle = boja2
             c.fillText("^", centarX + cvor.x*vel, offsetY + cvor.y*vel+ 50)
             c.closePath()
         }
     }
 
-    if (cvor.radius >= rad)
-    {
-
+    if (cvor.radius >= rad){
         if ((cvor.visited || op == "OB") && !ispis.find((x) => x.kljuc == cvor.kljuc)){
             ispis.push({...cvor, pos: ispis.length})
         }
@@ -538,18 +433,8 @@ function crtajPutanjuAnimacija(){
             btnUnfreeze.disabled = false
             txtInfo.innerHTML = "Animacija gotova"
             if (!freeze){
-                setButtonsDisable(false)
-                btnGenerisi.disabled = false
-                btnInsert.disabled = false
-                btnPostorder.disabled = false
-                btnInorder.disabled = false
-                btnTrazi.disabled = false
-                btnUnfreeze.disabled = true
-                inputInsert.disabled = false
-                inputTrazi.disabled = false
-                btnPause.disabled = true
-                btnMin.disabled = false
-                btnMax.disabled = false
+                setButtonsDisable(false, true)
+
                 txtInfo.innerHTML = "Nema animacije"
                 putIndex = 0
                 animPut = null
@@ -557,11 +442,6 @@ function crtajPutanjuAnimacija(){
                 return
             }
         }
-        /*if (animPut[putIndex + 1] && animPut[putIndex + 1].rezi){
-            //animPut[putIndex + 1].radius = rad
-            //putIndex++
-            
-        }*/
         if (putIndex < animPut.length - 1 && animPut[putIndex + 1].backtrack){
             putIndex++
             slideAnim.value = putIndex
@@ -581,21 +461,18 @@ function crtajPutanjuAnimacija(){
 function dist(start, end){
     var a = start.x - end.x;
     var b = start.y - end.y;
-
     var c = Math.sqrt( a*a + b*b );
-
     return c
 }
 
 function crtajLiniju(start, end, amount = 1){
-
     var startX = centarX + start.x * vel 
     var startY = offsetY + start.y * vel 
 
     var endX = centarX + end.x * vel 
     var endY = offsetY + end.y * vel 
     c.beginPath()
-    c.strokeStyle = "red";
+    c.strokeStyle = boja2
     c.moveTo(startX, startY);
     c.lineWidth = 10
     c.lineTo(startX + (endX - startX) * amount, startY + (endY - startY) * amount);
@@ -608,7 +485,7 @@ function crtajKrug(centar, radd, fill = true){
     if (!fill && radd > rad - 5)
         radd = rad - 5  
     c.arc(centarX + centar.x*vel, offsetY + centar.y*vel, radd, 0, 360)
-    c.fillStyle = 'red'
+    c.fillStyle = boja2
     if (fill)
         c.fill()
     else{ 
@@ -616,16 +493,15 @@ function crtajKrug(centar, radd, fill = true){
         if (radd > 5){
             c.beginPath()
             c.arc(centarX + centar.x*vel, offsetY + centar.y*vel, radd - 5, 0, 360)
-            c.fillStyle = "green"
+            c.fillStyle = boja1
             c.fill()
             c.closePath()
         }
     }
-    c.fillStyle = "black"
     c.font =  'bold 15pt Calibri';
     c.textAlign = "center"
     c.textBaseline = "middle"
-    c.fillStyle = "white"
+    c.fillStyle = boja3
     if (radd > 0)
         c.fillText(centar.kljuc, centarX + centar.x*vel,  offsetY + centar.y*vel)
     c.closePath()
@@ -653,18 +529,18 @@ function crtajKod(){
         kod.forEach(l => {
             c.beginPath()
             if (kodIndex == i)
-                c.fillStyle = "red"
+                c.fillStyle = boja2
             else
-                c.fillStyle = "green"
+                c.fillStyle = boja1
             c.fillRect(centarX + 700, offsetY + i*32, 300, 32)
             c.stroke()
             if (kodIndex == i)
-                c.fillStyle = "red"
+                c.fillStyle = boja2
             else
-                c.fillStyle = "green"
+                c.fillStyle = boja1
             c.textAlign = "left"
             c.textBaseline = "top"
-            c.fillStyle = "white"
+            c.fillStyle = boja3
             c.fillText(l, centarX + 700, offsetY + i*32)
             c.closePath()
             i++
@@ -677,9 +553,9 @@ function crtajIspis(){
         var ofsx = 1200
         var ofsy = 400
         c.rect(ofsx + ispis[i].pos*50, ofsy, 50, 50)
-        c.fillStyle = "green"
+        c.fillStyle = boja1
         c.fill()
-        c.fillStyle = "white"
+        c.fillStyle = boja3
         c.font = "bold 15pt calibri"
         c.textAlign = "left"
         c.textBaseline = "top"
@@ -707,8 +583,7 @@ function crtaj(){
             }
         }
     }
-    requestAnimationFrame(crtaj)
-    
+    requestAnimationFrame(crtaj) 
 }
 
 crtaj()
