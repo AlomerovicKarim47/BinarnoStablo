@@ -106,9 +106,11 @@ slideAnim.oninput = function(){
     putIndex = frame
     if (frame < animPut.length)
         btnUnfreeze.disabled = true
+    ispis = []
     for (var i = 0; i < frame; i++){
         animPut[i].amount = 1
         animPut[i].radius = rad
+        ispis.push(animPut[i].kljuc)
     }
     for (var i = frame; i < animPut.length; i++){
         animPut[i].amount = 0
