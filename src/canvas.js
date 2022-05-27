@@ -15,7 +15,7 @@ var inputInsert = document.getElementById('inputInsert')
 var slideBrzina = document.getElementById('slideBrzina')
 var textBrzina = document.getElementById('textBrzina')
 var inputTrazi = document.getElementById('inputTrazi')
-var btnTrazi =document.getElementById('btnTrazi')
+var btnTrazi = document.getElementById('btnTrazi')
 var btnUnfreeze = document.getElementById('btnUnfreeze')
 var txtInfo = document.getElementById('infoText')
 var btnPause = document.getElementById('btnPause')
@@ -25,9 +25,14 @@ var btnMax = document.getElementById('btnMax')
 
 //Pozicije
 var centarX = window.innerWidth/3
-var offsetY = 50
-var vel = 70 //duzina i sirina celije grida
+var offsetY = 80
+var velX = 60
+var velY = 80 //duzina i sirina celije grida
 var rad = 30 //radius cvorova
+var ispisX = 1200
+var ispisY = 400
+var kodX = 700
+var kodY = 300
 
 //Za kontrolu animacije putanje
 var animPut = null
@@ -225,15 +230,15 @@ btnInsert.onclick = function(){
 var crtajCvor = function(cvor){
     if (stablo.novi && cvor.kljuc == stablo.novi.kljuc)
         return
-    var x = centarX + cvor.x * vel
-    var y = offsetY + cvor.y * vel
+    var x = centarX + cvor.x * velX
+    var y = offsetY + cvor.y * velY
     
     if (cvor.roditelj){
         c.beginPath()
         c.moveTo(x, y)
         c.lineWidth = 5
         c.strokeStyle = boja1
-        c.lineTo(centarX + cvor.roditelj.x*vel, offsetY + cvor.roditelj.y*vel)
+        c.lineTo(centarX + cvor.roditelj.x*velX, offsetY + cvor.roditelj.y*velY)
         c.stroke()
         c.closePath()
     }
@@ -246,7 +251,7 @@ var crtajCvor = function(cvor){
     c.font =  'bold 15pt Calibri';
     c.textAlign = "center"
     c.textBaseline = "middle"
-    c.fillText(cvor.kljuc, centarX + cvor.x*vel,  offsetY + cvor.y*vel)
+    c.fillText(cvor.kljuc, centarX + cvor.x*velX,  offsetY + cvor.y*velY)
     c.closePath()
 }
 
@@ -418,7 +423,7 @@ function crtajPutanjuAnimacija(){
             c.beginPath()
             c.font = "30pt Calibri"
             c.fillStyle = boja2
-            c.fillText("^", centarX + cvor.x*vel, offsetY + cvor.y*vel+ 50)
+            c.fillText("^", centarX + cvor.x*velX, offsetY + cvor.y*velY+ 50)
             c.closePath()
         }
     }
@@ -434,7 +439,6 @@ function crtajPutanjuAnimacija(){
             txtInfo.innerHTML = "Animacija gotova"
             if (!freeze){
                 setButtonsDisable(false, true)
-
                 txtInfo.innerHTML = "Nema animacije"
                 putIndex = 0
                 animPut = null
@@ -466,11 +470,11 @@ function dist(start, end){
 }
 
 function crtajLiniju(start, end, amount = 1){
-    var startX = centarX + start.x * vel 
-    var startY = offsetY + start.y * vel 
+    var startX = centarX + start.x * velX 
+    var startY = offsetY + start.y * velY 
 
-    var endX = centarX + end.x * vel 
-    var endY = offsetY + end.y * vel 
+    var endX = centarX + end.x * velX 
+    var endY = offsetY + end.y * velY 
     c.beginPath()
     c.strokeStyle = boja2
     c.moveTo(startX, startY);
@@ -484,7 +488,7 @@ function crtajKrug(centar, radd, fill = true){
     c.beginPath()
     if (!fill && radd > rad - 5)
         radd = rad - 5  
-    c.arc(centarX + centar.x*vel, offsetY + centar.y*vel, radd, 0, 360)
+    c.arc(centarX + centar.x*velX, offsetY + centar.y*velY, radd, 0, 360)
     c.fillStyle = boja2
     if (fill)
         c.fill()
@@ -492,7 +496,7 @@ function crtajKrug(centar, radd, fill = true){
         c.stroke()
         if (radd > 5){
             c.beginPath()
-            c.arc(centarX + centar.x*vel, offsetY + centar.y*vel, radd - 5, 0, 360)
+            c.arc(centarX + centar.x*velX, offsetY + centar.y*velY, radd - 5, 0, 360)
             c.fillStyle = boja1
             c.fill()
             c.closePath()
@@ -503,7 +507,7 @@ function crtajKrug(centar, radd, fill = true){
     c.textBaseline = "middle"
     c.fillStyle = boja3
     if (radd > 0)
-        c.fillText(centar.kljuc, centarX + centar.x*vel,  offsetY + centar.y*vel)
+        c.fillText(centar.kljuc, centarX + centar.x*velX,  offsetY + centar.y*velY)
     c.closePath()
 }
 
@@ -532,7 +536,7 @@ function crtajKod(){
                 c.fillStyle = boja2
             else
                 c.fillStyle = boja1
-            c.fillRect(centarX + 700, offsetY + i*32, 300, 32)
+            c.fillRect(centarX + kodX, offsetY + i*32, kodY, 32)
             c.stroke()
             if (kodIndex == i)
                 c.fillStyle = boja2
@@ -550,8 +554,8 @@ function crtajKod(){
 function crtajIspis(){
     for (var i = 0; i < ispis.length; i++){
         c.beginPath()
-        var ofsx = 1200
-        var ofsy = 400
+        var ofsx = ispisX
+        var ofsy = ispisY
         c.rect(ofsx + ispis[i].pos*50, ofsy, 50, 50)
         c.fillStyle = boja1
         c.fill()
