@@ -110,7 +110,9 @@ slideAnim.oninput = function(){
     for (var i = 0; i < frame; i++){
         animPut[i].amount = 1
         animPut[i].radius = rad
-        ispis.push(animPut[i].kljuc)
+        if ((animPut[i].visited || op == "OB") && !ispis.find((x) => x.kljuc == animPut[i].kljuc)){
+            ispis.push({...animPut[i], pos: ispis.length})
+        }
     }
     for (var i = frame; i < animPut.length; i++){
         animPut[i].amount = 0
