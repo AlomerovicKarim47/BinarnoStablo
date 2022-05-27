@@ -31,8 +31,12 @@ var velY = 80 //duzina i sirina celije grida
 var rad = 30 //radius cvorova
 var ispisX = 1200
 var ispisY = 400
-var kodX = 700
-var kodY = 300
+var kodX = centarX + 700
+var kodY = offsetY
+var kodRedSirina = 300
+var kodRedVisina = 32
+var ispisCelijaVisina = 50
+var ispisCelijaSirina = 50
 
 //Za kontrolu animacije putanje
 var animPut = null
@@ -515,9 +519,70 @@ function crtajKrug(centar, radd, fill = true){
     c.closePath()
 }
 
+var vuci = false
+var startKodX = kodX
+var startKodY = kodY
+var mx, my
+var BB = canvas.getBoundingClientRect()
+var ofX = BB.left
+var ofY = BB.top
+var moveTarget = null
+canvas.onmousedown = onDown
+canvas.onmousemove = onMove
+canvas.onmouseup = onUp
+
+function onDown(e){
+    e.preventDefault()
+    e.stopPropagation()
+
+    mx = parseInt(e.clientX - ofX)
+    my = parseInt(e.clientY - ofY) 
+    vuci = false
+
+    if (kod && mx > kodX && mx <  kodX + kodRedSirina && my > kodY && my < kodY + kod.length*kodRedVisina){
+        vuci = true
+        moveTarget = "kod"
+    }
+    else if (ispis.length > 0 && mx > ispisX && mx < ispisX + ispis.length*ispisCelijaSirina
+                && my > ispisY && my < ispisY + ispisCelijaVisina){
+        vuci = true
+        moveTarget = "ispis"
+    }
+    else
+        moveTarget = "x"
+
+    startKodX = mx
+    startKodY = my
+}
+
+function onUp(e){
+    e.preventDefault()
+    e.stopPropagation()
+    vuci = false
+}
+
+function onMove(e){
+    e.preventDefault()
+    e.stopPropagation()
+    if (vuci){
+        mx=parseInt(e.clientX - ofX)
+        my=parseInt(e.clientY - ofY)
+        var dx = mx - startKodX
+        var dy = my - startKodY
+        if (moveTarget == "kod"){
+            kodX += dx
+            kodY += dy
+        }
+        else if (moveTarget == "ispis"){
+            ispisX += dx
+            ispisY += dy
+        }
+    }
+}
+
 function crtajKod(){
     var i = 0
-    var kod = null
+    kod = null
     if (op == "INS")
         kod = insertKod
     else if (op == "OB")
@@ -540,7 +605,7 @@ function crtajKod(){
                 c.fillStyle = boja2
             else
                 c.fillStyle = boja1
-            c.fillRect(centarX + kodX, offsetY + i*32, kodY, 32)
+            c.fillRect(kodX, kodY + i*32, kodRedSirina, kodRedVisina)
             c.stroke()
             if (kodIndex == i)
                 c.fillStyle = boja2
@@ -549,7 +614,7 @@ function crtajKod(){
             c.textAlign = "left"
             c.textBaseline = "top"
             c.fillStyle = boja3
-            c.fillText(l, centarX + 700, offsetY + i*32)
+            c.fillText(l, kodX, kodY + i*32)
             c.closePath()
             i++
         });
@@ -560,14 +625,14 @@ function crtajIspis(){
         c.beginPath()
         var ofsx = ispisX
         var ofsy = ispisY
-        c.rect(ofsx + ispis[i].pos*50, ofsy, 50, 50)
+        c.rect(ofsx + ispis[i].pos*ispisCelijaSirina, ofsy, ispisCelijaSirina, ispisCelijaVisina)
         c.fillStyle = boja1
         c.fill()
         c.fillStyle = boja3
         c.font = "bold 15pt calibri"
         c.textAlign = "left"
         c.textBaseline = "top"
-        c.fillText(ispis[i].kljuc, ofsx + ispis[i].pos*50 + 15, ofsy + 15)  
+        c.fillText(ispis[i].kljuc, ofsx + ispis[i].pos*ispisCelijaSirina + 15, ofsy + 15)  
         c.closePath()
     }
 }
@@ -591,6 +656,8 @@ function crtaj(){
             }
         }
     }
+    startKodX = mx
+    startKodY = my
     requestAnimationFrame(crtaj) 
 }
 
