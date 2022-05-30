@@ -432,8 +432,10 @@ function crtajPutanjuAnimacija(){
             c.font = "30pt Calibri"
             c.fillStyle = boja2
             c.fillText("^", centarX + cvor.x*velX, offsetY + cvor.y*velY+ 50)
+            c.font = "15pt Calibri"
             c.closePath()
         }
+        
     }
 
     if (cvor.radius >= rad){
@@ -444,10 +446,31 @@ function crtajPutanjuAnimacija(){
         cvor.radius = rad
         if (putIndex >= animPut.length-1){
             btnUnfreeze.disabled = false
-            txtInfo.innerHTML = "Animacija gotova"
+            txtInfo.innerHTML = "Animacija gotova. "
+
+            c.beginPath()
+            c.font = "13pt Calibri"
+            c.fillStyle = boja2
+            if (op == "TRA"){
+                if (animPut[putIndex].kljuc == parseInt(inputTrazi.value))
+                    txtInfo.innerHTML += "Ključ pronađen." //c.fillText("Ključ pronađen", centarX + cvor.x*velX, offsetY + cvor.y*velY+ 70)
+                else if (putIndex == animPut.length - 1){
+                    txtInfo.innerHTML += "Ključ nije pronađen." //c.fillText("Ključ nije pronađen", centarX + cvor.x*velX, offsetY + cvor.y*velY+ 50)
+                }   
+            }
+            else if (op == "OB" || op == "IN" || op == "POST")
+                txtInfo.innerHTML += "Obilazak gotov."
+            else if (op == "MIN")
+                txtInfo.innerHTML += "Minimum pronađen."
+            else if (op == "MAX")
+                txtInfo.innerHTML += "Maksimum pronađen."
+            else if (op == "INS")
+                txtInfo.innerHTML += "Ključ umetnut."
+            c.closePath()
+
             if (!freeze){
                 setButtonsDisable(false, true)
-                txtInfo.innerHTML = "Nema animacije"
+                txtInfo.innerHTML = "Nema animacije."
                 putIndex = 0
                 animPut = null
                 stablo.novi = null            

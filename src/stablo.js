@@ -171,7 +171,7 @@ class Stablo{
     }
 
     trazi(x, kljuc, put = []){
-        put.push(x)
+        if (x) put.push(x)
         if (!x || kljuc == x.kljuc){ 
             var rez = {
                 cvor: x, 
